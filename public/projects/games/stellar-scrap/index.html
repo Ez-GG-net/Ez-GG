@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stellar Scrap</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas class="main"></canvas>
+    <div class="ui noselect">
+        <p class="ammo noselect">ur poor womp womp</p>
+        <p class="speed noselect">u gotta be sped furst</p>
+        <p class="timeSurvived noselect">u havent been born yet</p>
+        <p class="health noselect">u dont exist</p>
+        <p class="scraps noselect">u broke</p>
+        <p class="fuel noselect">water vapor isnt good fuel</p>
+        <p class="oxygen noselect">ur in space u get none</p>
+        <p class="enemySpawnAlert noselect">not even ur enemies wanna get close to you</p>
+        <p class="inventoryAmount noselect">carrying=weak</p>
+    </div>
+    <div class="shopUI">
+        <p class="alerts">u need friends to get alerts
+           
+        </p>
+        <button class="cancelBuy">Cancel</button>
+        <button class="finalBuy">Purchase</button>
+       
+        <div class="ammo">
+         <button class="buyButton" id="buyammo">Buy 50 ammo</button>
+         <p class="cost noselect">50 scraps</p>
+        </div>
+        <div class="shootpowerup">
+         <button class="buyButton" id="buypowerup">Buy 1+ Burst Spread</button>
+         <p class="cost noselect">200 scraps</p>
+        </div>
+       <div class="cooldownpowerup">
+            <button class="buyButton" id="buycooldown">Buy -2 Shoot Cooldown</button>
+            <p class="cost noselect">300 scraps</p>
+           </div>
+           <div class="morePickupAmount">
+            <button class="buyButton" id="buycarry">Buy +3 carry Strength</button>
+            <p class="cost noselect">150 scraps</p>
+           </div>
+       
+     </div>
+     <div class="deathScreen">
+        <div class="deathScreen-content">
+            <h1>Game Over</h1>
+            <p class="finalScore">Your survied: <span id="finalScoreValue">0</span> Seconds</p>
+            <button class="playAgainButton">Play Again</button>
+        </div>
+    </div>
+    <div class="startScreen">
+        <div class="startScreen-content">
+            <br>
+        <output class="title1">Stellar</output>
+        <output class="title2">Scrap</output><br>
+        <br>
+        <button id="startButton">Start The Game</button>
+        <p class="starthighscore">High Score: L</p>
+        <p class="tip">no tip for u</p>
+    </div>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>

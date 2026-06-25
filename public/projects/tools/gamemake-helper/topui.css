@@ -1,0 +1,113 @@
+/* Top UI Styling */
+.topui {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background-color: #2a2a2a;
+    border-bottom: 1px solid #000000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 1100;
+    gap: 10px;
+}
+
+/* Button Styling */
+.topui button {
+    padding: 8px 12px;
+    padding-left:30px;
+    background-color: #4caf50;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.topui button:hover {
+    background-color: #45a049;
+}
+
+/* Icon Styling for Buttons */
+.topui button .icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    background-size: contain;
+    background-repeat: no-repeat;
+    position:absolute;
+ 
+  
+}
+
+/* Specific Button Icons */
+#copyButton .icon {
+    background-image: url('icons/copy.png'); /* Replace with actual icon path */
+    filter:brightness(100);
+    margin-top:-1px;
+    margin-left:-22.5px;
+  
+}
+
+#pasteButton .icon {
+    background-image: url('icons/paste.png'); /* Replace with actual icon path */
+
+    
+    filter:invert(1);
+    
+    width:24px;
+    height:24px;
+
+    margin-top:-3.5px;
+    margin-left:-25px;
+    
+}
+
+#undoButton .icon {
+    background-image: url('icons/undo.png'); /* Replace with actual icon path */
+
+
+    filter:invert(0);
+ 
+
+    margin-top:-2px;
+    margin-left:-23px;
+}
+
+#redoButton .icon {
+    background-image: url('icons/undo.png'); /* Replace with actual icon path */
+
+    transform:scaleX(-1);
+
+    filter:invert(0);
+ 
+
+    margin-top:-2px;
+    margin-left:-23px;
+}
+
+#duplicateButton .icon {
+    background-image: url('icons/duplicate.svg'); /* Replace with actual icon path */
+}
+
+/* Spacing Adjustment for Mobile or Smaller Screens */
+@media (max-width: 768px) {
+    .topui {
+        flex-wrap: wrap;
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .topui button {
+        flex: 1 1 calc(50% - 10px); /* Adjust button size for smaller screens */
+        text-align: center;
+    }
+}

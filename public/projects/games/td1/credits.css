@@ -1,0 +1,97 @@
+/* Hidden credits paragraph */
+#credits {
+    position:fixed;
+    top: 0;
+    right:20px;
+    transition:transform 0.5s
+}
+#credits:hover {
+    transform:scale(1.1);
+    color:#ccc
+}
+
+/* Credits Menu Container */
+.creditsMenu {
+    position: fixed;
+    top: 0;
+    left:0;
+    background-color: #000000;
+
+    
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    
+    width: 100%;
+    height:100%;
+    text-align: center;
+    z-index: 1000;
+
+    display:none;
+}
+
+/* Close Button */
+.closeCredits {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    background-color: #303030;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.closeCredits:hover {
+    background-color: #e60000;
+}
+
+/* Credits Text */
+.creditsMenu p {
+    margin: 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+/* Link Styling */
+.creditsMenu a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.creditsMenu a:hover {
+    text-decoration: underline;
+}
+
+/* List Styling */
+.creditsMenu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+   
+}
+
+.creditsMenu ul li {
+    font-size: 14px;
+    color: #f5f5f5;
+    margin: 5px 0;
+}
+
+
+.creditsMenu h3 {
+    font-size: 18px;
+    color: #ffffff;
+    margin-bottom:3px;
+    margin-top:3px
+}
+.creditsMenu h2 {
+    font-size: 24px;
+    color: #ffffff;
+    margin-bottom:10px;
+    text-decoration: underline;
+}
+

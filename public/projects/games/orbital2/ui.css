@@ -1,0 +1,105 @@
+    /* Full-Screen UI */
+    #uiOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        
+        color: white;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items:end;
+        justify-content: first baseline;
+    }
+
+    /* Box containing all UI elements */
+    #uiBox {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        width: 250px;
+        text-align: center;
+        overflow:scroll;
+        /*Dont show the scrollbar*/
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+        /* Box containing all UI elements */
+        #uiBoxLeft {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            width: 250px;
+            position:absolute;
+            left:0;
+            text-align: center;
+        }
+
+    /* Input Fields */
+    input {
+        width: 55px;
+        margin: 5px;
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    /* Play Button */
+    button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background: green;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    button:hover {
+        background: limegreen;
+    }
+
+    /* Planet Entry */
+    .planetEntry {
+        margin: 10px 0;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+    }
+
+    .colorBox {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+    /* Collapsible UI Box */
+.collapsible {
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+}
+
+/* Minimized UI Box */
+.collapsed {
+    max-height: 0;
+    padding: 0;
+}
+
+/* Toggle Button */
+.toggleButton {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+}
+
+.toggleButton:hover {
+    background: rgba(255, 255, 255, 0.3);
+}

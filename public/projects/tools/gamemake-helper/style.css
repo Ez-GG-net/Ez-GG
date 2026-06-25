@@ -1,0 +1,350 @@
+/* General body styling */
+body {
+    margin: 0;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    background-color: #1a1a1a;
+    font-family: Arial, sans-serif;
+    color: #d9d9d9;
+}
+:root{
+    --button-color: #4caf50;
+
+}
+
+#game {
+    position: fixed;
+    left: 340px;
+    top:50px;
+    
+}
+
+/* Main UI container styling with scrollable content */
+#ui {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 300px;
+    height: calc(90vh - 50px); /* Set full viewport height */
+    padding: 20px;
+    background-color: #232323;
+    border-right: 1px solid #000000;
+    box-shadow: 4px 0 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    overflow-y:scroll; /* Enable vertical scrolling */
+}
+
+
+/* Add element section styling */
+#addElement {
+    margin-bottom: 20px;
+}
+
+#addElement h1 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #e0e0e0;
+}
+
+#elementName {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    background-color: #141414;
+    color: #ffffff;
+    box-sizing: border-box;
+}
+
+#addElementButton {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--button-color);
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#addElementButton:hover {
+    background-color: #45a049;
+}
+
+/* Adjustments section styling */
+#adjustments {
+    display:none;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #333;
+}
+
+#adjustments label {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #b3b3b3;
+}
+
+#adjustments input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    background-color: #141414;
+    border: 1px solid #333;
+    border-radius: 4px;
+    color: #ffffff;
+    box-sizing: border-box;
+}
+
+/* Color preview box styling */
+/* Add these new styles to your existing style.css file */
+
+/* Color control group styling - adjusted for your layout */
+.color-control-group {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 60px;
+    margin-right: 10px;
+}
+
+.color-preview-row {
+    display: flex;
+    align-items: center;
+}
+
+#colorPreview {
+    width: 60px;
+    height: 60px;
+    background-color: #ffffff;
+    border: 1px solid #333;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 0;
+}
+#lastColorButtonContainer {
+    margin-top: -3px;
+    margin-left:3px;
+    text-align: center;
+}
+
+#useLastColorButton {
+    padding: 5px 10px;
+    background-color: var(--button-color);
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+  
+    font-size: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width:55px;
+}
+
+#useLastColorButton:hover {
+    background-color: #45a049;
+}
+
+
+.alpha-control {
+    width: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+#alphaSlider {
+    width: 100%;
+    height: 4px;
+    appearance: none;
+    background: linear-gradient(to right, transparent, #fff);
+    border-radius: 2px;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+#alphaSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--button-color);
+    cursor: pointer;
+}
+
+#alphaSlider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--button-color);
+    cursor: pointer;
+    border: none;
+}
+
+#alphaValue {
+    width: 100%;
+    padding: 2px;
+    text-align: center;
+    background-color: #141414;
+    border: 1px solid #333;
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 12px;
+    box-sizing: border-box;
+}
+
+/* Adjust the control group to accommodate the alpha control */
+.control-group {
+    display: flex;
+    align-items: flex-start; /* Changed from center to flex-start */
+    gap: 10px;
+    margin: 10px 0;
+}
+
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.image-upload-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background-color: #141414;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid #333;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: relative;
+    overflow: hidden;
+   translate:-5px -40px;
+}
+
+.image-upload-button:hover {
+    background-color: #2a2a2a;
+}
+
+.upload-icon {
+    color: #ffffff;
+    font-size: 20px;
+    line-height: 1;
+    z-index: 1;
+}
+.filename-preview {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 8px;
+    padding: 2px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: none;
+}
+
+#colorPreview {
+    margin-left: 3px; /* Remove the existing margin */
+}
+.image-upload-container {
+    position: relative;
+    display: inline-block;
+}
+
+.delete-image-button {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 16px;
+    height: 16px;
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    padding: 0;
+    line-height: 1;
+    z-index: 2;
+}
+
+.delete-image-button:hover {
+    background-color: #ff0000;
+}
+.has-image .upload-icon {
+    display: none;
+}
+
+.has-image .filename-preview {
+    display: block;
+}
+
+/* Element list styling */
+#elementList {
+    margin-top: 20px;
+}
+
+#elementList h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #a9a9a9;
+}
+
+/* Make the element list scrollable */
+#elementListItems {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px; /* Adjust this height to fit your layout */
+    overflow-y: auto; /* Make the list scrollable */
+}
+
+#elementListItems li {
+    padding: 8px;
+    margin-bottom: 5px;
+    background-color: #141414;
+    color: #d9d9d9;
+    border-radius: 4px;
+}
+#importButton, #export, #saveButton {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 1000;
+    padding: 10px;
+    background-color: var(--button-color);
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+#importButton {
+    left:150px;
+}
+#saveButton {
+    left:214.5px;
+}
+#importButton:hover, #export:hover {
+    background-color: #45a049;
+}

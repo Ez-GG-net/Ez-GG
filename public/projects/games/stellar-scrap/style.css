@@ -1,0 +1,329 @@
+body, html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000; /* Dark background for space theme */
+}
+
+.main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.ui {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    color: white;
+    font-size: 24px;
+}
+
+.ui p {
+    position: absolute;
+    margin: 0;
+}
+
+.ui .ammo { top: 1.5rem; left: 1.5rem; }
+.ui .speed { top: 1.5rem; right: 1.5rem; }
+.ui .timeSurvived { bottom: 1.5rem; left: 1.5rem; }
+.ui .health {   
+    width:100%;
+    top:3.25rem;
+    text-align:center;}
+.ui .scraps { top: 4rem; left: 1.5rem; }
+.ui .fuel {
+    width:100%;
+    top:0.5rem;
+    text-align:center;
+}
+.ui .oxygen {
+    width:100%;
+    top:1.75rem;
+    text-align:center;
+}
+.ui .enemySpawnAlert {
+    width:60%;
+    left: calc((100% - 60%)/2);
+    bottom:4.75rem;
+    text-align:center;
+    font-size: 26px;
+    font-weight: bold;
+    background-color: rgba(174, 0, 0, 0.8);
+    color: white;
+    padding: 4px;
+    border-radius: 10px;
+    z-index: 3;
+    transition: opacity 0.5s;
+}
+.ui .inventoryAmount {
+    width:20%;
+    left: calc((100% - 20%)/2);
+    bottom:1.75rem;
+    text-align:center;
+    font-size: 26px;
+    font-weight: bold;
+    background-color: rgba(0, 174, 67, 0.8);
+    color: white;
+    padding: 4px;
+    border-radius: 10px;
+    z-index: 3;
+    transition: opacity 0.5s;
+}
+orange {
+    color: orange
+}
+green {
+    color: green
+}
+red {
+    color: red
+}
+blue {
+    color:#445dff
+}
+white {
+    color:white;
+}
+
+.shopUI {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    background-color: rgba(35, 35, 35, 0.9);
+    border:white solid 10px;
+    border-radius: 10px;
+    width: 50%;
+    max-height: 80vh;
+    overflow-y: auto;
+    overflow-x:hidden;
+    z-index: 3;
+    padding-top:70px;
+}
+
+.shopUI .ammo,
+.shopUI .shootpowerup,
+.shopUI  .cooldownpowerup ,
+.shopUI .morePickupAmount
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #484848;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+.buyButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.buyButton:hover {
+    background-color: #45a049;
+}
+
+.shopUI .cost {
+    font-size: 14px;
+    color: #666;
+    margin: 10px 0 0 0;
+}
+
+.noselect {
+    user-select: none;
+}
+.alerts {
+    /*On the top of the screen red*/
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    font-size: 14px;
+    z-index: 4;
+
+}
+.cancelBuy {
+    /*On the top of the screen red*/
+    position: fixed;
+    top: 14px;
+    right: 0;
+    width: 20%;
+    padding: 10px;
+    background-color: rgba(155, 0, 0, 0.8);
+    color: white;
+    font-size: 14px;
+    z-index: 4;
+    border:0;
+}
+
+.cancelBuy:hover {
+        background-color:rgb(100, 0, 0);
+}
+
+.finalBuy {
+    /*On the top of the screen red*/
+    position: fixed;
+    top: 14px;
+    right: 20%;
+    width: 20%;
+    padding: 10px;
+    background-color: rgb(0, 155, 44);
+    color: white;
+    font-size: 14px;
+    z-index: 4;
+    border:0;
+}
+
+.finalBuy:hover {
+        background-color:rgb(0, 100, 0);
+}
+
+
+
+.deathScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.deathScreen-content {
+    background-color: #000f22;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.deathScreen h1 {
+    font-size: 48px;
+    color: #ff4444;
+    margin-bottom: 20px;
+}
+
+.deathScreen .finalScore {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.deathScreen .playAgainButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.deathScreen .playAgainButton:hover {
+    background-color: #3a873e;
+}
+#finalScoreValue {
+    color:rgb(148, 148, 148);
+}
+
+
+.startScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.startScreen-content {
+    background-color: #002a1c;
+    padding: 20px 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+#startButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+.startScreen output {
+    font-size: 48px;
+    color: #4AA5FF;
+
+    font-weight:bold;
+    
+}
+.startScreen .title1 {
+    color: #4AA5FF;
+}
+.startScreen .title2 {
+   
+    color: #FF6B4A;
+  
+}
+.starthighscore {
+    color:white;
+}
+.tip {
+    color:rgb(121, 123, 255);
+    font-size:14px;
+}

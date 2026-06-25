@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Detection from Camera (Class-Based Colors)</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+</head>
+<body>
+    <h1>Object Detection from Camera Feed (Class-Based Colors)</h1>
+    <video id="video" width="640" height="480" autoplay style="display:none;"></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <br>
+    <label for="brightness">Brightness: </label>
+    <input type="range" id="brightness" min="100" max="200" value="100">
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const brightnessSlider = document.getElementById('brightness');
+
+        // Load the COCO-SSD model
+        let model;
+        cocoSsd.load().then(loadedModel => {
+            model = loadedModel;
+            // Start video streaming once the model is loaded
+            startVideo();
+        });
+
+        // Start the video stream
+        function startVideo() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.addEventListener('loadeddata', predictObjects);
+                })
+                .catch(err => console.error("Error accessing the camera:", err));
+        }
+
+        // Generate a color based on the class name
+        function getColorForClass(className) {
+            let hash = 0;
+            for (let i = 0; i < className.length; i++) {
+                hash = className.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            const h = hash % 360;
+            return `hsl(${h}, 70%, 50%)`;
+        }
+
+        // Predict objects in the video stream
+        function predictObjects() {
+            model.detect(video).then(predictions => {
+                // Clear the canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw the video frame with brightness adjustment
+                ctx.filter = `brightness(${brightnessSlider.value}%)`;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                ctx.filter = 'none';  // Reset filter for bounding boxes
+                
+                // Draw bounding boxes and labels for each detected object
+                predictions.forEach(prediction => {
+                    const [x, y, width, height] = prediction.bbox;
+                    const color = getColorForClass(prediction.class);
+                    ctx.strokeStyle = color;
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(x, y, width, height);
+                    
+                    ctx.fillStyle = color;
+                    ctx.font = '16px Arial';
+                    ctx.fillText(prediction.class, x, y > 10 ? y - 5 : 10);
+                });
+                
+                // Call this function again to create a loop
+                requestAnimationFrame(predictObjects);
+            });
+        }
+    </script>
+</body>
+</html>

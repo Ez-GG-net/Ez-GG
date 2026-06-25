@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Ship</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="warning.css">
+</head>
+<body>
+   
+    <canvas id="main"></canvas>
+    <div class="startMenu">
+        <h1 id="title">Flappy Ship</h1>
+        <button id="startButton">Start The Game</button>
+        <p class="starthighscore">High Score: L</p>
+    </div>
+    <p class="score">L</p>
+    <div id="warningBoss">
+        <p class="rightText">!</p>
+    </div>
+    <div id="bossUI">
+        <div id="healthbar"></div>
+    </div>
+    <div class="deadScreen">
+        <p>Game Over</p>
+        <button id="deadScreenPlayAgainButton">Play Again</button>
+        <p class="finalscore">Score: L</p>
+        <p class="highscore">High Score: L</p>
+    </div>
+
+
+    <script src="index.js"></script>
+    <script src="bossfight1.js"></script>
+</body>
+</html>

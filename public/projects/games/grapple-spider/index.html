@@ -1,0 +1,2236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Game</title>
+</head>
+<body style="
+margin:0;overflow:hidden">
+    <script>
+
+let canvasListeners = [];
+let ScenecanvasListeners = []
+let currentCamera = {x:0,y:0}
+let currentMousePosition = {x:0,y:0}
+
+//*------------------------------------------Register the Canvas----------------------------------------------------------------
+const updateCanvasSize = (canvas)=>{ 
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    }
+const registerCanvas  = ()=>{
+const canvas = document.createElement('canvas');
+
+
+
+document.body.appendChild(canvas);
+
+
+canvas.setAttribute('id','GameCanvas');
+canvas.innerHTML = ' Your browser does not support the HTML5 canvas tag.'
+updateCanvasSize(canvas)
+
+}
+registerCanvas()
+//*------------------------------------------End of Registering the Canvas----------------------------------------------------------------
+ /**
+ * @typedef {'click' | 'mousedown'|'mouseup'|'mouseover'| 'mouseenter'| 'mouseout'|'mouseleave'| 'mousemove'
+ *            | 'pointerdown'|'pointerup'|'pointerover'| 'pointerenter'| 'pointerout'|'pointerleave'| 'pointermove'} ObjectListener
+ * @typedef {'click' | 'mousedown'|'mouseup'|'mouseover'| 'mouseenter'| 'mouseout'|'mouseleave'| 'mousemove' |
+ *             'pointerdown'|'pointerup'|'pointerover'| 'pointerenter'| 'pointerout'|'pointerleave'| 'pointermove' |
+ *            'keydown'| 'keypress'| 'keyup'} SceneListener
+ */
+
+/**
+ * A Scene Contrustor that is used to render a scene of Game Objects
+ * @param {Object} [options] Options for the Scene
+ * @param {String} [options.name] Name of the scene
+ * @param {Number} [options.renderRate] How many times per second the scene should update/render
+ * @param {String} [options.backgroundColor] Background color for the scene
+ * @param {Number} [options.friction] How much the friction will decrease any Objects Speed on the scene
+ */
+function Scene(options){
+    this.name = options.name
+    this.renderRate = options.renderRate?options.renderRate:300;
+    this.backgroundColor = options.backgroundColor || 'black'
+    this.gameObjects = []
+    this.lights = []
+
+    this.listeners = []
+
+    this.center = {
+        x:  document.querySelector('#GameCanvas').width/2,
+        y:  document.querySelector('#GameCanvas').height/2
+    }
+   this.id = ScenecanvasListeners.length
+  
+   this.friction = options.friction==undefined ? 0.50 : options.friction
+}
+/**
+ * Adds a GameObject to the Scene.
+ * @param  {...GameObject2D} GameObjects The GameObjects to add to the scene
+ */
+Scene.prototype.add = function (...GameObjects){
+   
+    this.gameObjects.push(...GameObjects)
+}
+/**
+ * Adds a Light to the Scene.
+ * @param  {...Light2D} Lights The Light(s) to add to the scene
+ */
+Scene.prototype.addLight = function (...Lights){
+   
+    this.lights.push(...Lights)
+}
+let currentScene = null;
+let currentSceneInterval = null;
+/**
+ * Loads the scene and uses it to render its objects
+ */
+Scene.prototype.load = function(){
+    if (currentSceneInterval) clearInterval(currentSceneInterval)
+    
+    currentScene = this;
+    currentSceneInterval = 
+    setInterval(()=>{
+        
+        //* 
+        const CameraOffset = {x:currentCamera.x-this.center.x,y:currentCamera.y-this.center.y}
+
+
+        const canvas =  document.querySelector('#GameCanvas')
+        const ctx = canvas.getContext('2d')
+        ctx.drawCircle = (centerX,centerY,radius, borderWidth=0)=>{
+            ctx.beginPath();
+          ctx.arc(centerX+-CameraOffset.x, centerY+-CameraOffset.y, radius,0, 2 * Math.PI,false);
+          
+          ctx.fill();
+          if (borderWidth > 0) {
+          ctx.lineWidth = borderWidth;
+          
+          ctx.stroke();
+          
+          }
+          };
+        function calculateAngleFromPoss(obj1x, obj1y, obj2) {
+            const dx = obj2.x - obj1x;
+            const dy = obj2.y - obj1y;
+            return Math.atan2(dy, dx)+Math.PI;
+        }
+          function castRays(light, objects, numRays = 360) {
+            const rays = [];
+            const raysS = []
+            const raysT = []
+          
+            
+      
+            const step = 2 * Math.PI / numRays; // Angle between each ray
+
+            //calculate ray angle for each object
+           objects.forEach(obj => {
+          if (!obj.showShadow) return;
+            const rayAngle = {
+                TL: 
+                 calculateAngleFromPoss(obj.x, obj.y, light),
+                TR:
+                calculateAngleFromPoss(obj.x+obj.width, obj.y, light),
+                BL: 
+                 calculateAngleFromPoss(obj.x, obj.y+obj.height, light),
+                BR:
+                calculateAngleFromPoss(obj.x+obj.width, obj.y+obj.height, light),
+                touched: {
+                    TL: 
+                    calculateAngleFromPoss(obj.x+1, obj.y+1, light),
+                   TR:
+                   calculateAngleFromPoss(obj.x+obj.width-1, obj.y+1, light),
+                   BL: 
+                    calculateAngleFromPoss(obj.x+1, obj.y+obj.height-1, light),
+                   BR:
+                   calculateAngleFromPoss(obj.x+obj.width-1, obj.y+obj.height-1, light)
+                }
+            }
+        if (obj.y+obj.height>light.y && obj.x+obj.width < light.x) {
+                rays.push([rayAngle.BL, rayAngle.TL, rayAngle.BR, rayAngle.TR])
+               } else   if (obj.y+obj.height>light.y && obj.x-obj.width > light.x) {
+                rays.push([rayAngle.BL, rayAngle.TL, rayAngle.BR, rayAngle.TR])
+               }
+           else if ((obj.x > light.x && obj.y > light.y)
+        || (obj.y < light.y&& obj.x < light.x)) {
+            rays.push([rayAngle.TL, rayAngle.TR, rayAngle.BL, rayAngle.BR])
+           }  else{
+            rays.push([rayAngle.BL, rayAngle.BR, rayAngle.TL, rayAngle.TR])
+           }
+            raysT.push([rayAngle.touched.TL, rayAngle.touched.TR, rayAngle.touched.BL, rayAngle.touched.BR])
+           })
+
+           //calculate ray angle for the screens corners
+           const rayAngle = {
+            TL: 
+             calculateAngleFromPoss(0, 0, light),
+            TR:
+            calculateAngleFromPoss(0+canvas.width, 0, light),
+            BL: 
+             calculateAngleFromPoss(0, 0+canvas.height, light),
+            BR:
+            calculateAngleFromPoss(0+canvas.width, 0+canvas.height, light)
+        }
+        raysS.push(rayAngle.TL, rayAngle.TR, rayAngle.BL, rayAngle.BR)
+           rays.forEach((objrays, i)=>{
+            let objray = []
+            objrays.forEach((ray)=>{
+             
+            objray.push(castRay(light,ray,objects,objects))
+         
+            })
+            rays[i] = objray
+         
+           })
+           raysT.forEach((objrays, i)=>{
+            let objray = []
+            objrays.forEach((ray)=>{
+             
+            objray.push(castRay(light,ray,objects,objects))
+         
+            })
+            raysT[i] = objray
+         
+           })
+           
+           raysS.forEach((ray, i)=>{
+           // raysS[i] = castRay(light,ray,objects)
+           })
+           return {obj:rays, touched:raysT,Screen:[{x:0, y:0},{x:canvas.width,y:0},{x:0, y:canvas.height},{x:canvas.width, y:canvas.height}]}
+        }
+        
+        function castRay(light, angle, objects) {
+        const maxDistance = light.intensity*800+50; // Maximum distance a ray can travel
+            const stepSize = 1; // Step size for the ray to move forward
+            let distance = 0;
+        
+            let ray = {
+                x: light.x,
+                y: light.y,
+                angle: angle,
+                distance: 0
+            };
+        
+            while (distance < maxDistance) {
+                distance += stepSize;
+                const nextX = ray.x + Math.cos(angle) * stepSize;
+                const nextY = ray.y + Math.sin(angle) * stepSize;
+        
+                // Check for collisions with objects
+                let collided = false;
+                for (const obj of objects) {
+                    if (isPointCollidingWithObject(nextX, nextY, obj)) {
+                        ray.x = nextX;
+                        ray.y = nextY;
+                        ray.distance = distance;
+                        collided = true;
+                        break;
+                    } else if (nextX == 0) {
+                        ray.x = nextX - 100;
+                        ray.y = nextY;
+                        ray.distance = distance;
+                        collided = true;
+                        break;
+                    }
+                }
+        
+                if (collided) break;
+        
+                ray.x = nextX;
+                ray.y = nextY;
+                ray.distance = distance;
+            }
+        
+            return ray;
+        }
+        
+        function drawLightRays(ctx, light, rays, drawcircle=false) {
+            const maxDistance = 1000; // Maximum distance a ray can travel
+        
+            if (drawcircle){
+                ctx.globalCompositeOperation = "lighter";
+            if (light.fade) {
+            var grad = ctx.createRadialGradient(light.x+-CameraOffset.x, light.y+-CameraOffset.y, 0, light.x+-CameraOffset.x, light.y+-CameraOffset.y, light.intensity*800);
+            grad.addColorStop(0, light.color);
+            grad.addColorStop(1, "transparent");
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            } else {
+             
+                ctx.fillStyle = light.color;
+              
+            }
+
+            ctx.beginPath()
+            ctx.moveTo(light.x-CameraOffset.x,light.y-CameraOffset.y)
+
+            const difangle = Math.abs(light.angles.start-light.angles.end)
+            for (let i = 0; i <= difangle; i++) {
+            const angle1 = (light.angles.start+light.rotation+i) * Math.PI/180
+            const angle2 = (light.angles.start+light.rotation+i) * Math.PI/180
+
+
+            const nextX = light.x + Math.cos(angle1) * light.intensity*800;
+            const nextY = light.y + Math.sin(angle1) * light.intensity*800;
+
+            const nextX2 = light.x + Math.cos(angle2) * light.intensity*800
+            const nextY2 = light.y + Math.sin(angle2) * light.intensity*800;
+
+
+
+            ctx.lineTo(nextX-CameraOffset.x, nextY-CameraOffset.y);
+            ctx.lineTo(nextX2-CameraOffset.x, nextY2-CameraOffset.y);
+            }
+            
+            
+            ctx.closePath()
+            
+                ctx.fill()
+        }
+     
+      
+        ctx.globalCompositeOperation = 'source-over';
+      
+           rays.obj.forEach((objrays, index)=>{
+       ctx.beginPath()
+            rays.touched.forEach(otouchray=>{
+                otouchray.forEach(touchray=>{
+            
+             
+                ctx.strokeStyle = 'white'
+              /*  ctx.beginPath()
+                ctx.moveTo(light.x, light.y);
+                ctx.lineTo(objray.x, objray.y);
+                ctx.closePath()
+                ctx.stroke()*/
+
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+            ctx.moveTo(touchray.x, touchray.y);
+            objrays.forEach(objray=>{
+                ctx.lineTo(objray.x, objray.y);
+            })
+            ctx.closePath() 
+          //  ctx.fill()
+           
+        
+            objrays.forEach((ray, i)=>{
+              
+
+                      const opacity =  1 + light.intensity/2 - (ray.distance / maxDistance); // Gradually reduce opacity
+                
+             
+        
+           
+
+              //  ctx.strokeStyle = grad
+                 // ctx.fillStyle = grad
+                
+             
+           
+              
+               ctx.fillStyle = currentScene.backgroundColor
+                ctx.lineTo(objrays[i].x, objrays[i].y);
+               // ctx.lineTo(objrays[3].x, objrays[3].y);
+                
+            
+           
+              
+                //ctx.lineTo(light.x+1, light.y+1)
+               
+              
+             
+          
+             
+               
+               
+                ctx.fill()
+
+             //   ctx.stroke()
+            })
+          
+       
+         //   ctx.fill()
+        
+          //  ctx.fill()
+          
+        })
+        
+    })
+    
+    ctx.closePath() 
+  /*  ctx.save()
+    
+    ctx.clip()
+    currentScene.gameObjects.forEach(gameObject=>{
+        if (gameObject.showOnlyInLight) {
+            ctx.globalCompositeOperation = 'source-over';
+          //  const gameObject = currentScene.gameObjects[(i/4).toFixed(0)]
+            ctx.fillStyle = gameObject.material.color
+            ctx.fillRect(gameObject.x+-CameraOffset.x, gameObject.y+-CameraOffset.y, gameObject.width, gameObject.height)
+           
+           }  
+        })
+        ctx.restore()*/
+})
+ctx.globalCompositeOperation = 'source-over';
+
+
+
+        }
+       
+      
+        updateCanvasSize(canvas)
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.fillStyle = currentScene.backgroundColor
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+
+        currentScene.lights.forEach(light=>{
+            
+         
+            ctx.save();
+            ctx.translate(light.x, light.y)
+            ctx.scale(currentCamera.zoom,currentCamera.zoom)
+           //// ctx.rotate((light.rotation) * Math.PI / 180)  
+          
+            ctx.globalAlpha = 1;
+
+            ctx.translate(-light.x, -light.y)
+
+            
+           
+            ctx.globalAlpha = 1;
+            
+            const objects = currentScene.gameObjects
+     
+           for (let i = 0; i < objects.length; i++) {
+       const ray = castRays({...light, x:light.x+-CameraOffset.x,y:light.y+-CameraOffset.y-0.01},[objects[i]].map((object)=>{return{...object,x:object.x+-CameraOffset.x,y:object.y+-CameraOffset.y}}),light.rays)
+drawLightRays(ctx, light,ray, i==0?true:false);
+           }
+  //ctx.fillStyle = 'yellow'
+ //  ctx.drawCircle(light.x,light.y,14)
+    
+ctx.globalAlpha = 1;
+ctx.restore();
+
+        })
+
+        let optimisedObjects = [];
+        currentScene.gameObjects
+       .map((gameObject)=>{
+            if (gameObject.x+-CameraOffset.x-1 > canvas.width
+                || gameObject.x+-CameraOffset.x-1+gameObject.width < 0
+                || gameObject.y+-CameraOffset.y-1 > canvas.height
+                || gameObject.y+-CameraOffset.y-1+gameObject.height < 0
+            ) return
+            optimisedObjects.push(gameObject)
+            return
+        })
+     currentScene.gameObjects.forEach(gameObject=>{
+       
+            const center = {
+                x: gameObject.x+-CameraOffset.x + gameObject.width / 2,
+                y: gameObject.y+-CameraOffset.y + gameObject.height / 2
+            }
+            ctx.save();
+            ctx.translate(center.x, center.y)
+            ctx.rotate((gameObject.rotation) * Math.PI / 180)
+            ctx.scale(currentCamera.zoom,currentCamera.zoom)
+          
+            ctx.globalAlpha = gameObject.opacity;
+
+            ctx.translate(-center.x, -center.y)
+
+            
+            if (gameObject.text) {
+                
+                //Run if gameObject is text
+
+                ctx.fillStyle = gameObject.color
+                ctx.font = `${gameObject.fontSize} ${gameObject.fontStyle}`
+                ctx.fillText(gameObject.text,gameObject.x,gameObject.y)
+                return
+            }
+           
+            if (gameObject.geometry.type === 'box2d') {
+               
+               
+               
+               
+                if (gameObject.material.color) {
+             
+                    ctx.globalCompositeOperation = "source-over";
+                    
+                    ctx.fillStyle = gameObject.material.color
+                ctx.fillRect(gameObject.x+-CameraOffset.x, gameObject.y+-CameraOffset.y, gameObject.width, gameObject.height)
+               
+                    
+                }
+        
+            
+            } else if (gameObject.geometry.type == 'circle') {
+               
+                ctx.fillStyle = gameObject.material.color
+                  ctx.drawCircle(gameObject.getCenter().x, gameObject.getCenter().y,gameObject.geometry.radius)
+                 
+            }
+        
+            if (gameObject.currentAnimation){
+                ctx.drawImage(gameObject.currentAnimation.frames[gameObject.currentAnimation.currentFrame],gameObject.x+-CameraOffset.x,gameObject.y+-CameraOffset.y,gameObject.width,gameObject.height)
+            } else if (gameObject.material.texture) {
+                
+////console.log(gameObject.material.texture.data)
+                ctx.drawImage(gameObject.material.texture.data,gameObject.x+-CameraOffset.x,gameObject.y+-CameraOffset.y,gameObject.width, gameObject.height)
+              
+            } 
+          
+               
+                ctx.globalAlpha = 1;
+                ctx.restore();
+//*-------------------------Calculate velocitys of the objects----------------
+gameObject.x += gameObject.velocity.x
+gameObject.y += gameObject.velocity.y
+           gameObject.velocity.x = gameObject.velocity.x * (1-currentScene.friction)
+            gameObject.velocity.y = gameObject.velocity.y * (1-currentScene.friction)
+            let collidingDirections = {
+                top: false,
+                bottom: false,
+                left: false,
+                right: false,
+                objects: [],
+                x: null,
+                y: null
+            }
+            if (!gameObject.doCollison) return
+            currentScene.gameObjects.forEach((otherGameObject, index)=>{
+                if (gameObject === otherGameObject) return
+               if (!otherGameObject.doCollison) return
+                let collision;
+                if (gameObject.type == otherGameObject.type) {    
+                    collision = gameObject.isCollidingWith(otherGameObject)
+                   } else {
+                       collision = gameObject.isCollidingWith({...otherGameObject,type:'box2d'})
+                   }
+                
+            if (collision.collided === true) {
+            
+            if (!collidingDirections.top) {
+          
+            collidingDirections.top = collision.top
+            }
+            if (!collidingDirections.bottom) {
+             
+            collidingDirections.bottom = collision.bottom
+            }
+            if (!collidingDirections.left) {
+        
+            collidingDirections.left = collision.left
+            }
+            if (!collidingDirections.right) {
+
+            collidingDirections.right = collision.right
+            }
+            collidingDirections.objects.push(index)
+         
+           if (collision.x) {
+            collidingDirections.x = collision.x
+            collidingDirections.y = collision.y
+
+            
+           }
+           gameObject.onCollide(collidingDirections)
+            
+        }
+            })
+            ////console.log(collidingDirections.objects)
+            if (gameObject.velocity.x > 0) {
+                if (collidingDirections.right) {
+               
+                    if (gameObject.velocity.x > 0) {
+                        collidingDirections.objects.forEach(numb=>{
+                            if (!currentScene.gameObjects[numb].immovable) {
+                            currentScene.gameObjects[numb].velocity.x = gameObject.velocity.x
+                         
+                            }
+                            gameObject.x -= gameObject.velocity.x
+                        })
+                    gameObject.velocity.x *= -1 * gameObject.elasticity;
+                    }
+                
+                }
+            } else if (gameObject.velocity.x < 0) {
+                if (collidingDirections.left) {
+                    if (gameObject.velocity.x < 0) {
+                        collidingDirections.objects.forEach(numb=>{
+                            if (!currentScene.gameObjects[numb].immovable) {
+                            currentScene.gameObjects[numb].velocity.x = gameObject.velocity.x
+                            }
+                            gameObject.x -= gameObject.velocity.x
+                        })
+                    gameObject.velocity.x *= -1* gameObject.elasticity;
+                    }
+                }
+            }
+            if (gameObject.velocity.y < 0) {
+                if (collidingDirections.top) {
+                    if (gameObject.velocity.y < 0) {
+                        collidingDirections.objects.forEach(numb=>{
+                            if (!currentScene.gameObjects[numb].immovable) {
+                            currentScene.gameObjects[numb].velocity.y = gameObject.velocity.y
+                            }
+                            gameObject.y -=  gameObject.velocity.y
+                        })
+                    
+                    gameObject.velocity.y *= -1* gameObject.elasticity;
+                    }
+                }
+            } else if (gameObject.velocity.y > 0) {
+                if (collidingDirections.bottom) {
+                    if (gameObject.velocity.y > 0) {
+                        collidingDirections.objects.forEach(numb=>{
+                            if (!currentScene.gameObjects[numb].immovable) {
+                            currentScene.gameObjects[numb].velocity.y = gameObject.velocity.y
+                            }
+                            gameObject.y -= gameObject.velocity.y
+                        })
+                    gameObject.velocity.y *= -1* gameObject.elasticity;
+                    }
+                }
+            }
+            if (collidingDirections.x) {
+
+                //!WORKING
+
+                const first = gameObject;
+                const second = currentScene.gameObjects[collidingDirections.objects[0]];
+                if (second.immovable){
+                     return
+                }
+                first.mass = 100;
+                second.mass = 100;
+                
+                const cr = first.mass + second.mass;
+                const dr = first.mass - second.mass;
+                
+                // Calculate the difference in positions
+                const dx = second.getCenter().x - first.getCenter().x;
+                const dy = second.getCenter().y - first.getCenter().y;
+                
+                // Calculate the distance between the centers
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                // Normalize the direction vector (collision normal)
+                const nx = dx / distance;
+                const ny = dy / distance;
+                
+                // Calculate relative velocity
+                const vxRelative = first.velocity.x - second.velocity.x;
+                const vyRelative = first.velocity.y - second.velocity.y;
+                
+                // Calculate the velocity along the normal
+                const vnRelative = vxRelative * nx + vyRelative * ny;
+                
+                // Only continue if the objects are moving towards each other
+             //   if (vnRelative > 0) return;
+                
+                // Determine new velocities after collision
+                const impulse = (2 * vnRelative) / cr;
+                
+                first.velocity.x -= impulse * second.mass * nx;
+                first.velocity.y -= impulse * second.mass * ny;
+                second.velocity.x += impulse * first.mass * nx;
+                second.velocity.y += impulse * first.mass * ny;
+            return
+               //! NOT WORKING
+                       
+
+                //move away from the circle
+                const directionToMove =
+                -Math.atan2(
+                    (collidingDirections.x - gameObject.getCenter().x),( collidingDirections.y - gameObject.getCenter().y)
+                )* 180/Math.PI
+                const speed = 1
+console.log(gameObject.velocity.x,gameObject.velocity.y)
+                gameObject.velocity.y += speed  * Math.cos(directionToMove * (Math.PI / 180));
+                gameObject.velocity.x +=  speed  * Math.sin(directionToMove * (Math.PI / 180));
+
+            }
+
+          ////  console.log(gameObject.x, gameObject.y)
+            //*Optimise velocity
+            if (gameObject.velocity.x < 0.01 && gameObject.velocity.x > -0.01) {
+                gameObject.velocity.x = 0
+            }
+        })
+        ctx.save()
+Game.onRender(ctx)
+ctx.restore()
+
+
+
+
+        ctx.save()
+        ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = "lighter";
+        ctx.scale(1,1)
+        ctx.fillStyle = currentCamera.shaderColor
+        ctx.fillRect(0,0,canvas.width,canvas.height)
+
+        
+        ctx.restore()
+
+
+
+
+
+    },1000/(currentScene.renderRate))
+
+
+
+}
+const keypressed = {
+   
+}
+const InputManager = function (data){
+       
+    if (data.type === 'keydown' || data.type === 'keypress') {
+        if (data.input == ' ') {
+            keypressed['space'] = true
+        }
+    keypressed[data.input] = true
+    } 
+     if (data.type === 'keyup'){
+        if (data.input == ' ') {
+            keypressed['space'] = false
+        }
+        keypressed[data.input] = false
+    }
+
+}
+const SceneEventListener = (e)=>{
+    if (e.key) {
+InputManager({input:e.key, type:e.type})
+    }
+    ScenecanvasListeners.forEach(scene=>{
+        const CameraOffset = {x:currentCamera.x-currentScene.center.x,y:currentCamera.y-currentScene.center.y}
+        scene.listeners.forEach(listener=>{
+        if (listener.listener === e.type ) {
+              
+
+               
+                
+                listener.func({
+                    x:e.clientX+CameraOffset.x,
+                    y:e.clientY+CameraOffset.y,
+                    key:e.key
+                })
+            
+        }
+    })
+    })
+}
+/**
+ * Adds a listener to the specified Scene.
+ * 
+ * 
+ * @param {SceneListener} listener The listener to watch for.
+ * @param {Function} func The function to call/run when the listener is heard.
+ */
+Scene.prototype.addEventListener = function(listener, func){
+    this.listeners.push({listener:listener, func:func})
+    ScenecanvasListeners[this.id] = this
+
+    //* Add the extra event listeners
+    document.addEventListener('keydown',SceneEventListener)
+    document.addEventListener('keypress',SceneEventListener)
+    document.addEventListener('keyup',SceneEventListener)
+}
+document.addEventListener('keydown',SceneEventListener)
+document.addEventListener('keypress',SceneEventListener)
+document.addEventListener('keyup',SceneEventListener)
+document.getElementById('GameCanvas').addEventListener('mousemove',(e)=>{currentMousePosition.x = e.offsetX; currentMousePosition.y = e.offsetY})
+Scene.prototype.getInput = function(){
+
+
+return keypressed
+}
+
+/**
+ * 
+ * @param {String} text 
+ * @param {Number} x 
+ * @param {Number} y 
+ * @param {Object} [options]
+ * @param {Object} [options.color]
+ * @param {Object} [options.fontSize]
+ * @param {Object} [options.fontStyle]
+ */
+const Text2D = function(text,x,y,options){
+    if (options) {
+    options = {...options,...{
+        color: 'black',
+        fontSize: '12px',
+        fontStyle: 'Arial'
+    }}
+} else {
+    options = {
+        color: 'black',
+        fontSize: '12px',
+        fontStyle: 'Arial'
+    }
+}
+    
+    this.text = text
+    this.x = x
+    this.y = y
+    this.color = options.color
+    this.fontSize = options.fontSize
+    this.fontStyle = options.fontStyle
+
+
+}
+
+
+
+
+/**
+ * @param {Object} [options] The options for light rendering (Not needed unless geometry.type is set to AmbientLight)
+ * @param {Number} [options.rays] How many rays to raycast when rendering lighting (Default: 360)
+ * @param {String} [options.color] The color of the light (Default: White)
+ * @param {Boolean} [options.fade] Whether to fade the light as it gets farther away (Defualt: false)
+ * @param {Boolean} [options.intensity] How brightly the light will shine. (Defualt: 0.5)
+ * @param {Number} [options.rotation] What rotation the light be (Default: 0)
+ */
+function Light2D(options, position) {
+  
+        this.rays = options.rays===undefined?360:options.rays
+        this.color = options.color || 'white'
+        this.fade = options.fade===undefined?false:options.fade
+        this.intensity = options.intensity===undefined?0.5:options.intensity
+
+        this.x = position?.x || 0
+    this.y = position?.y || 0
+    this.rotation = options.rotation||0;
+
+    this.opacity = 1;
+   
+   this.scene = null;
+
+   this.angles = {
+    start:options.startAngle===undefined?0:options.startAngle,
+    end: options.endAngle===undefined?360:options.endAngle,
+   }
+  
+}
+/**
+ * @param {Object} [options] The options for the camera
+ * @param {Number} [options.zoom] How many the camera should zoom
+ * @param {String} [options.shaderColor] The color of the light to make everything else
+ * 
+ * @param {Object} [position] The position of the object
+ * @param {Object} [position.x] The x position of the object
+ * @param {Object} [position.y] The y position of the object
+
+ */
+function Camera(options, position) {
+  
+   this.zoom = options.zoom
+   this.shaderColor = options.shaderColor
+
+    this.x = position?.x || 0
+this.y = position?.y || 0
+
+this.opacity = 1;
+
+this.scene = null;
+
+this.offset = {
+    x:this.x-currentScene.center.x,
+    y:this.y-currentScene.center.y
+}
+}
+/**
+ * Uses the specified Camera as the current one
+ */
+Camera.prototype.useAsCurrent = function(){
+    currentCamera = this;
+}
+/**
+ * Sets the specified Camera as the current one
+ */
+Camera.prototype.setAsCurrent = function(){
+    currentCamera = this;
+}
+
+Camera.prototype.moveStepTowardsPosition = function(targetX, targetY, stepSize) {
+    // Calculate the direction vector
+    const dx = targetX - this.x;
+    const dy = targetY - this.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    // If the distance is less than or equal to the step size, move directly to the target
+    if (distance <= stepSize) {
+        this.x = targetX;
+        this.y = targetY;
+    } else {
+        // Normalize the direction vector
+        const unitX = dx / distance;
+        const unitY = dy / distance;
+
+        // Move the camera by the step size in the direction of the target
+        this.x += unitX * stepSize;
+        this.y += unitY * stepSize;
+    }
+};
+/**
+ * 
+ * @param {Object} [geometry] The geometry of the 2d Game Object that will be rendered
+ * @param {String} [geometry.type] The type of geometry (Supported type(s): box2d, circle)
+ * @param {Number} [geometry.width] The width of the geometry
+ * @param {Number} [geometry.height] The height of the geometry
+ * @param {Number} [geometry.radius] The radius of the geometry if the type of the geometry is supported
+ * 
+ * @param {Object} [material] The material of the 2d Game Object that will be rendered
+ * @param {String} [material.color] The color of the material (Optional if texture is provided)
+ * @param {String} [material.texture] The texture path of the 2d Game Object that will be rendered (Optional if color is provided).
+
+ * 
+ * @param {Object} [position] The position of the object
+ * @param {Object} [position.x] The x position of the object
+ * @param {Object} [position.y] The y position of the object
+ */
+function GameObject2D(geometry, material, position) {
+    if (geometry.type) {
+        const types = new Set([
+            'box2d',
+            'circle',
+
+         
+        ])
+    if (!types.has(
+        geometry.type
+    )) throw new Error('GameObject2D Geometry Type is not supported')
+}
+
+    this.x = position?.x || 0
+    this.y = position?.y || 0
+
+    this.material = {color: material?.color||'', texture: material?.texture};
+    this.geometry = { 
+        type:geometry.type||'box2d',
+        width:geometry.width||0,
+        height:geometry.height||0,
+        radius:geometry.radius||0
+    }
+    this.radius = this.geometry.radius
+    this.width = this.geometry.width
+    this.height = this.geometry.height
+   this.listeners = []
+   this.velocity = {x:0,y:0}
+   this.rotation = 0;
+this.opacity = 1;
+   
+   this.scene = null;
+   this.showShadow = true;
+   this.currentAnimation = null;
+   this.AnimationPaused = false;
+   this.immovable = false;
+   this.elasticity = 0.3;
+   this.doCollison = true;
+
+   this.onCollide = function(collision){}
+}
+/**
+ * Set's the X and Y position to the Game Object
+ * @param {Number} x 
+ * @param {Number} y 
+ */
+GameObject2D.prototype.setPosition = function(x,y){
+    this.x = x
+    this.y = y
+}
+/**
+ * Add's the X and Y position to the Game Object
+ * @param {Number} x 
+ * @param {Number} y 
+ */
+GameObject2D.prototype.addPosition = function(x,y){
+    this.x -= x
+    this.y -= y
+}
+/**
+ * Set's the X and Y position to the light
+ * @param {Number} x 
+ * @param {Number} y 
+ */
+Light2D.prototype.setPosition = function(x,y){
+    this.x = x
+    this.y = y
+}
+/**
+ * Adds's the X and Y axis to the light
+ * @param {Number} x 
+ * @param {Number} y 
+ */
+Light2D.prototype.addPosition = function(x,y){
+    this.x -= x
+    this.y -= y
+}
+/**
+ * Rotates the light by the given angle (Degrees)
+ * @param {Number} amount 
+ */
+Light2D.prototype.rotate = function(amount) {
+    this.rotation += amount;
+    if (this.rotation > 360) this.rotation -= 360;
+    if (this.rotation < 0) this.rotation += 360;
+}
+/**
+ * Set's the X and Y position to the camera
+ * @param {Number} x 
+ * @param {Number} y 
+ */
+Camera.prototype.setPosition = function(x,y){
+    this.x = x
+    this.y = y
+}
+/**
+ * Adds the set X and Y axis to the camera
+ * @param {Number} x 
+ * @param {Number} y 
+ */
+Camera.prototype.addPosition = function(x,y){
+    this.x -= x
+    this.y -= y
+}
+function isPointCollidingWithObject(pointX, pointY, obj) {
+    return (
+      pointX >= obj.x &&               // Point is to the right of the left edge
+      pointX  <= obj.x + obj.width &&   // Point is to the left of the right edge
+      pointY >= obj.y &&               // Point is below the top edge
+      pointY <= obj.y + obj.height     // Point is above the bottom edge
+    );
+  }
+ 
+/**
+ * Adds a listener to the specified Game Object.
+ * 
+ * 
+ * @param {ObjectListener} listener The listener to watch for.
+ * @param {Function} func The function to call/run when the listener is heard.
+ */
+GameObject2D.prototype.addEventListener = function(listener, func){
+    this.listeners.push({listener:listener, func:func})
+    canvasListeners.push({listener:listener, obj:this,func:func})
+
+    const eventListenerFunction =  function(e){
+      
+        
+   
+        canvasListeners.forEach((listener, i)=>{
+          
+            
+               
+                if (isPointCollidingWithObject(e.offsetX,e.offsetY, listener.obj)) {
+                    if (listener.listener === e.type ) {
+                    
+                      
+                    listener.func(e,
+                        {
+                        RelativeOffsetX:e.offsetX-listener.obj.x,
+                        RelativeOffsetY:e.offsetY-listener.obj.y
+                      
+                    }
+                )
+               
+                    
+                } 
+                
+            
+        } 
+             
+            
+        })
+    }
+//* Add all the listeners ----------------------------------------------------------------
+
+    document.querySelector('#GameCanvas').addEventListener('click',(e)=>{eventListenerFunction(e);SceneEventListener(e)})
+
+    document.querySelector('#GameCanvas').addEventListener('mousedown',(e)=>{eventListenerFunction(e);SceneEventListener(e)})
+    document.querySelector('#GameCanvas').addEventListener('mouseup',(e)=>{eventListenerFunction(e);SceneEventListener(e)})
+    document.getElementById('GameCanvas').addEventListener('mouseover',(e)=>{eventListenerFunction(e);SceneEventListener(e)})
+    document.getElementById('GameCanvas').addEventListener('mouseenter',(e)=>{eventListenerFunction(e);SceneEventListener(e)})
+    document.getElementById('GameCanvas').addEventListener('mouseout',(e)=>{eventListenerFunction(e);SceneEventListener(e)})
+    document.getElementById('GameCanvas').addEventListener('mouseleave',(e)=>{eventListenerFunction(e);SceneEventListener(e)})
+    document.getElementById('GameCanvas').addEventListener('mousemove',(e)=>{eventListenerFunction(e);SceneEventListener(e); currentMousePosition.x = e.offsetX; currentMousePosition.y = e.offsetY})
+
+    document.querySelector('#GameCanvas').addEventListener('pointerdown',(e)=>{eventListenerFunction(e);SceneEventListener(e)})
+    document.querySelector('#GameCanvas').addEventListener('pointerup',(e)=>{eventListenerFunction(e);SceneEventListener(e)})
+    document.getElementById('GameCanvas').addEventListener('pointerover',(e)=>{eventListenerFunction(e);SceneEventListener(e)})
+    document.getElementById('GameCanvas').addEventListener('pointerenter',(e)=>{eventListenerFunction(e);SceneEventListener(e)})
+    document.getElementById('GameCanvas').addEventListener('pointerout',(e)=>{eventListenerFunction(e);SceneEventListener(e)})
+    document.getElementById('GameCanvas').addEventListener('pointerleave',(e)=>{eventListenerFunction(e);SceneEventListener(e)})
+    document.getElementById('GameCanvas').addEventListener('pointermove',(e)=>{eventListenerFunction(e);SceneEventListener(e)})
+
+
+}
+document.querySelector('#GameCanvas').addEventListener('click',(e)=>{SceneEventListener(e)})
+
+document.querySelector('#GameCanvas').addEventListener('mousedown',(e)=>{SceneEventListener(e)})
+document.querySelector('#GameCanvas').addEventListener('mouseup',(e)=>{SceneEventListener(e)})
+document.getElementById('GameCanvas').addEventListener('mouseover',(e)=>{SceneEventListener(e)})
+document.getElementById('GameCanvas').addEventListener('mouseenter',(e)=>{SceneEventListener(e)})
+document.getElementById('GameCanvas').addEventListener('mouseout',(e)=>{SceneEventListener(e)})
+document.getElementById('GameCanvas').addEventListener('mouseleave',(e)=>{SceneEventListener(e)})
+document.getElementById('GameCanvas').addEventListener('mousemove',(e)=>{SceneEventListener(e); currentMousePosition.x = e.offsetX; currentMousePosition.y = e.offsetY})
+
+document.querySelector('#GameCanvas').addEventListener('pointerdown',(e)=>{SceneEventListener(e)})
+document.querySelector('#GameCanvas').addEventListener('pointerup',(e)=>{SceneEventListener(e)})
+document.getElementById('GameCanvas').addEventListener('pointerover',(e)=>{SceneEventListener(e)})
+document.getElementById('GameCanvas').addEventListener('pointerenter',(e)=>{SceneEventListener(e)})
+document.getElementById('GameCanvas').addEventListener('pointerout',(e)=>{SceneEventListener(e)})
+document.getElementById('GameCanvas').addEventListener('pointerleave',(e)=>{SceneEventListener(e)})
+document.getElementById('GameCanvas').addEventListener('pointermove',(e)=>{SceneEventListener(e)})
+
+/**
+ * Increases the current X and Y's GameObject's position to move forward
+ * @param {Number} amount How much it should increase or decrease the current position
+ */
+GameObject2D.prototype.moveForward = function(amount){
+  
+    this.y += amount * Math.cos(this.rotation * (Math.PI / 180));
+    this.x += amount * Math.sin(this.rotation * (Math.PI / 180));
+
+}
+/**
+ * Increases the current X and Y's GameObject's position to move to its right
+ * @param {Number} amount How much it should increase or decrease the current position
+ */
+GameObject2D.prototype.moveRight = function(amount){
+  
+    this.x += amount * Math.cos(this.rotation * (Math.PI / 180));
+    this.y += amount * Math.sin(this.rotation * (Math.PI / 180));
+
+}
+/**
+ * Increases the current X and Y's GameObject's velocity to move forward
+ * @param {Number} amount How much it should increase or decrease the current velocity 
+ */
+GameObject2D.prototype.increaseVelocityForward = function(amount){
+
+    this.velocity.y += amount * Math.cos(this.rotation * (Math.PI / 180));
+    this.velocity.x += amount * Math.sin(this.rotation * (Math.PI / 180));
+
+}
+/**
+ * Increases the current X and Y's GameObject's velocity to move toward its right
+ * @param {Number} amount How much it should increase or decrease the current velocity 
+ */
+GameObject2D.prototype.increaseVelocityRight = function(amount){
+  
+    this.velocity.x += amount * Math.cos(this.rotation * (Math.PI / 180));
+    this.velocity.y += amount * Math.sin(this.rotation * (Math.PI / 180));
+
+}
+/**
+ * Increases the current X and Y's GameObject's velocity to move toward the specified position 
+ * @param {Object} [pos] The position to move toward
+ * @param {Number} [pos.x] The x position to move toward
+ * @param {Number} [pos.y] The y position to move toward 
+ * @param {Number} amount How much it should increase or decrease the current velocity 
+ */
+GameObject2D.prototype.increaseVelocityToward = function(pos, amount){
+  
+   const direction =  -Math.atan2(
+        (pos.x - this.getCenter().x),( pos.y - this.getCenter().y)
+    )* 180/Math.PI - 180
+
+    this.velocity.y -= amount * Math.cos(direction * (Math.PI / 180));
+    this.velocity.x += amount * Math.sin(direction * (Math.PI / 180));
+
+}
+GameObject2D.prototype.increaseVelocityTowardOnlyAffectY = function(pos, amount){
+  
+  const direction =  -Math.atan2(
+       (pos.x - this.getCenter().x),( pos.y - this.getCenter().y)
+   )* 180/Math.PI - 180
+
+   this.velocity.y -= amount * Math.cos(direction * (Math.PI / 180));
+  
+
+}
+GameObject2D.prototype.moveToward = function(pos, amount){
+  
+  const direction =  -Math.atan2(
+       (pos.x - this.getCenter().x),( pos.y - this.getCenter().y)
+   )* 180/Math.PI - 180
+
+   this.y -= amount * Math.cos(direction * (Math.PI / 180));
+   this.x += amount * Math.sin(direction * (Math.PI / 180));
+
+}
+GameObject2D.prototype.setVelocityToward = function(pos, amount){
+  
+    const direction =  -Math.atan2(
+         (pos.x - this.getCenter().x),( pos.y - this.getCenter().y)
+     )* 180/Math.PI - 180
+ 
+     this.velocity.y = -amount * Math.cos(direction * (Math.PI / 180));
+     this.velocity.x = amount * Math.sin(direction * (Math.PI / 180));
+ 
+ }
+ GameObject2D.prototype.setVelocityBackwardFrom = function(pos, amount){
+  
+    const direction =  Math.atan2(
+         (pos.x - this.getCenter().x),( pos.y - this.getCenter().y)
+     )* 180/Math.PI - 180
+ 
+     this.velocity.y = amount * Math.cos(direction * (Math.PI / 180));
+     this.velocity.x = amount * Math.sin(direction * (Math.PI / 180));
+ 
+ }
+/**
+ * Rotates the current Game object by the given amount of degrees
+ * @param {Number} amount 
+ */
+GameObject2D.prototype.rotate = function(amount) {
+    this.rotation += amount;
+    if (this.rotation > 360) this.rotation -= 360;
+    if (this.rotation < 0) this.rotation += 360;
+}
+/**
+ * Sets the current GameObject's rotation to look at the specified GameObject's position
+ * @param {GameObject2D} otherGameObject2D 
+ */
+GameObject2D.prototype.lookAt = function (otherGameObject2D) {
+     //look in direction
+     this.rotation = 
+   
+   
+     -Math.atan2(
+         (otherGameObject2D.getCenter().x - this.getCenter().x),( otherGameObject2D.getCenter().y - this.getCenter().y)
+     )* 180/Math.PI - 180
+}
+GameObject2D.prototype.getlookAtPosAngle = function (x,y) {
+    //look in direction
+    return     -Math.atan2(
+        (x - this.getCenter().x),(y - this.getCenter().y)
+    )* 180/Math.PI - 180
+}
+/**
+ * Sets the current GameObject's rotation to look at the specified X and Y position
+ * @param {Number} x
+ * @param {Number} y
+ */
+GameObject2D.prototype.lookAtPosition = function (x,y) {
+    //look in direction
+    this.rotation = 
+  
+  
+    -Math.atan2(
+        (x - this.getCenter().x),(y - this.getCenter().y)
+    )* 180/Math.PI - 180
+}
+/**
+ * Applies an X and Y force to the Game object
+ * @param {Number} forceX 
+ * @param {Number} forceY 
+ */
+GameObject2D.prototype.applyForce = function(forceX, forceY) {
+    this.velocity.x += forceX
+    this.velocity.y += forceY
+}
+/**
+ * Gets the center position of the current GameObject
+ * @returns The center position of the GameObject
+ */
+GameObject2D.prototype.getCenter = function() {
+    return {x:this.x + this.width / 2, y:this.y + this.height / 2}
+}
+
+
+/**
+ * 
+ * @param {GameObject2D} otherGameObject2D The other Game Object to detect collision with.
+ * @returns Returns if the 2 Game Objects collided,
+  @returns For Box2D objects: returns the direction of which direction the Game object collided,
+  @returns For Circle objects: returns the position of the circle to move to if it collided,
+ */
+GameObject2D.prototype.isCollidingWith = function(otherGameObject2D) {
+    function isColliding(obj1, obj2) {
+        return (
+            obj1.x < obj2.x + obj2.width &&
+            obj1.x + obj1.width > obj2.x &&
+            obj1.y < obj2.y + obj2.height &&
+            obj1.y + obj1.height > obj2.y
+        );
+    }
+        function getCollisionPointFromCircles(circle1, circle2) {
+            const dx = circle2.x - circle1.x; // Difference in x-coordinates
+            const dy = circle2.y - circle1.y; // Difference in y-coordinates
+            const distance = Math.sqrt(dx * dx + dy * dy); // Distance between the centers
+        
+            // Check if the circles are colliding
+            if (distance < circle1.radius + circle2.radius) {
+                // Calculate the overlap
+                const overlap = circle1.radius + circle2.radius - distance;
+        
+                // Normalize the direction vector
+                const nx = dx / distance;
+                const ny = dy / distance;
+        
+                // The separation vector is the normalized direction vector scaled by the overlap
+                const separationX = nx * overlap;
+                const separationY = ny * overlap;
+        
+                return { x: separationX, y: separationY };
+            } else {
+                return null; // No collision detected
+            }
+        }
+        function getCollisionPointCircleRectangle(circle, rect) {
+            // Find the closest point on the rectangle to the circle's center
+            const closestX = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
+            const closestY = Math.max(rect.y, Math.min(circle.y, rect.y + rect.height));
+        
+            // Calculate the distance between the circle's center and this closest point
+            const dx = closestX - circle.x;
+            const dy = closestY - circle.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+        
+            // Check if the closest point is inside the circle
+            if (distance < circle.radius) {
+                // Normalize the direction vector from the circle to the closest point
+                const nx = dx / distance;
+                const ny = dy / distance;
+        
+                // The collision point is the closest point on the rectangle
+                const collisionX = closestX;
+                const collisionY = closestY;
+        
+                // Optionally, you can return the overlap or separation vector
+                const overlap = circle.radius - distance;
+                const separationX = nx * overlap;
+                const separationY = ny * overlap;
+        
+                return { x: collisionX, y: collisionY, separationX, separationY };
+            } else {
+                return null; // No collision detected
+            }
+        }
+    
+    const obj1 = this
+    const obj2 = otherGameObject2D
+    if (this.geometry.type === 'box2d' && obj2.geometry.type === 'box2d' 
+        || /*Temporary:*/(obj1.geometry.type === 'circle' && obj2.geometry.type === 'box2d')
+        || (obj1.geometry.type === 'box2d' && obj2.geometry.type === 'circle'))  {
+        let collision = false;
+        const directions = {
+            left: false,
+            right: false,
+            top: false,
+            bottom: false
+        };
+    
+        // Check collision when obj1 is moved 1 pixel to the left
+        if (isColliding({ ...obj1, x: obj1.x - (Math.max(1,Math.abs(obj1.velocity.x))) }, obj2)) {
+            directions.left = true;
+            collision = true;
+        }
+    
+        // Check collision when obj1 is moved 1 pixel to the right
+        if (isColliding({ ...obj1, x: obj1.x + (Math.max(1,Math.abs(obj1.velocity.x))) }, obj2)) {
+            directions.right = true;
+            collision = true;
+        }
+    
+        // Check collision when obj1 is moved 1 pixel up
+        if (isColliding({ ...obj1, y: obj1.y - (Math.max(1,Math.abs(obj1.velocity.y))) }, obj2)) {
+            directions.top = true;
+            collision = true;
+        }
+    
+        // Check collision when obj1 is moved 1 pixel down
+        if (isColliding({ ...obj1, y: obj1.y + (Math.max(1,Math.abs(obj1.velocity.y))) }, obj2)) {
+            directions.bottom = true;
+            collision = true;
+        }
+    
+        return {...directions, collided:(directions.bottom||directions.top||directions.left||directions.right)};
+    } else if (obj1.geometry.type === 'circle' && obj2.geometry.type === 'circle') {
+        const collisionPoint = getCollisionPointFromCircles({...obj1, x:obj1.getCenter().x, y:obj1.getCenter().y},{...obj2, x:obj2.getCenter().x, y:obj2.getCenter().y});
+        
+        return {...collisionPoint, collided:collisionPoint!==null?true:false};
+    }
+    else if ((obj1.geometry.type === 'circle' && obj2.geometry.type === 'box2d')) {
+        const collisionPoint = getCollisionPointCircleRectangle({...obj1, x:obj1.getCenter().x, y:obj1.getCenter().y},{...obj2});
+     
+        return {...collisionPoint, collided:collisionPoint!==null?true:false};
+    } else if ((obj1.geometry.type === 'box2d' && obj2.geometry.type === 'circle')) {
+        const collisionPoint = getCollisionPointCircleRectangle({...obj1},{...obj2, x:obj2.getCenter().x, y:obj2.getCenter().y});
+    
+        return {...collisionPoint, collided:collisionPoint!==null?true:false};
+    }
+}
+/**
+ * A contructor that creates a texture with a set data
+ * @param {String} path 
+ */
+function Texture (path) {
+   
+    this.data = path?this.setToPath(path) : null;
+
+    
+}
+/**
+ * Sets the texture data to the given path
+ * @param {String} path 
+ * @returns The Texture data
+ */
+Texture.prototype.setToPath = function(path){
+    
+    const img = new Image();
+    img.src = path;
+
+      
+    return img
+   
+    
+}
+/**
+ * A Contrustor to apply to GameObjects to play a certain animation.
+ * @param {Object} [options] The options of the Animation.
+ * @param {Object} [options.repeat] If the animation should repeat [Default: true].
+ * @param {Object} [options.speed] How many frames per second the animation should play. 
+ */
+function Animation(options) {
+    this.frames = [];
+    this.currentFrame = 0;
+    this.repeat = options.repeat==undefined?false:options.repeat;
+    this.speed = 5; // frames per second
+}
+/**
+ * Clears all the frames in the Animation
+ */
+Animation.prototype.clearAllFrames = function () {
+    this.frames = [];
+    this.currentFrame = 0;
+}
+/**
+ * Adds the array of frames to the Animation
+ * @param {Array} frameArray 
+ */
+Animation.prototype.addFrames = function(frameArray = []){
+    
+this.frames = [...this.frames, ...frameArray];
+}
+/**
+ * Plays a certain animation (Note: Will replace current texture and animation)
+ * @param {Animation} Animation 
+ */
+GameObject2D.prototype.playAnimation = function(Animation){
+     this.currentAnimation = Animation
+    this.AnimationPaused = false;
+     const thisI = this
+     const thisIndex = this.id
+     console.log(this)
+     const endAnimation = (frame)=>{
+
+        thisI.currentAnimation.currentFrame = frame;
+        thisI.currentAnimation = null;
+        return frame}
+    return new Promise((res, rej)=>{
+        function playAnimationFrame(frame) {
+            if (thisI.AnimationPaused) return;
+            thisI.currentAnimation.currentFrame = frame;
+        ////    console.log(thisI.currentAnimation.frames)
+            setTimeout(()=>{
+                playAnimationFrame(
+                    frame+1==Animation.frames.length 
+                    ? (Animation.repeat?
+                        0
+                    
+                        
+                    :
+                    endAnimation(frame)
+                     
+                    )
+                    :frame+1)
+            },1000/Animation.speed)
+        }
+        playAnimationFrame(0)
+    })
+}
+/**
+ * Stops the current playing Animation
+ */
+GameObject2D.prototype.stopCurrentAnimation = function() {
+    if (this.currentAnimation == null) throw new Error("GameObject2D is not currently playing an animation");
+    this.currentAnimation = null;
+}
+/**
+ * Pauses the current Animation
+ */
+GameObject2D.prototype.pauseCurrentAnimation = function() {
+    if (this.currentAnimation == null) throw new Error("GameObject2D is not currently playing an animation");
+    this.AnimationPaused = true;
+}
+let showingDevStats = false;
+
+/**
+ * Shows FPS on the top left of the screen
+ */
+const showDevStats = function(){
+    if (showingDevStats) return
+            //dev tools
+                        //show FPS
+                        const counter = document.createElement("div")
+                        counter.style.display = 'block';
+                        counter.style.position = 'fixed';
+                        counter.style.top = '0.5rem';
+                        counter.style.left = '0.5rem';
+                        counter.style.width = 'auto'
+                        counter.style.height = 'auto'
+                        counter.style.backgroundColor = 'rgba(0, 0, 255,1)'
+                        counter.style.padding = '0.5rem'
+                        counter.style.border = '1px solid rgba(255, 255, 255)'
+                        counter.style.borderRadius = '0.2rem'
+                        counter.style.fontFamily = 'Helvetica'
+                        document.body.appendChild(counter)
+                    
+                        //calculate FPS
+            var times = [];
+            var fps;
+            
+            function refreshLoop() {
+              window.requestAnimationFrame(function() {
+                const now = performance.now();
+                while (times.length > 0 && times[0] <= now - 1000) {
+
+                  times.shift();
+                  
+                }
+                times.push(now);
+                fps = times.length;
+
+                counter.innerHTML = `<b>${'FPS'.fontcolor('#00db45')}${': '.fontcolor('white')}</b>${`${fps}`.fontcolor('white')}`
+                refreshLoop();
+              });
+            }
+            refreshLoop()
+
+}
+/**
+ * Gets the Current Mouse Position
+ * @returns The mouse's position relative to the camera and the scene
+ */
+const getCurrentMousePosition = function (){
+    
+    return {
+        x:currentMousePosition.x+currentCamera.x-currentScene.center.x,
+        y:currentMousePosition.y+currentCamera.y-currentScene.center.y
+    }
+}
+const onRender = function(){
+
+}
+
+const Game = {
+    GameObject2D,
+    Scene,
+    Light2D,
+    Text2D,
+    Camera,
+    Animation,
+    Texture,
+    onRender,
+    showDevStats,
+    getCurrentMousePosition,
+    
+}
+
+
+//*----------------------------------------------------------
+
+
+    
+
+try {
+
+const scene = new Game.Scene({
+    backgroundColor:'rgb(20,20,20)',
+    friction:0.001
+})
+scene.load()
+
+const camera = new Game.Camera({
+    
+})
+camera.useAsCurrent()
+
+const player = new Game.GameObject2D({
+    width:20,
+    height:20,
+    type:'box2d',
+
+},{
+    color:'white'
+},{
+    x:0,
+    y:0,
+})
+scene.add(player)
+
+      let recentlyCalculatedGrapple = false;
+let mousedown = false;
+let grapplePos = {
+    x:null,
+    y:null,
+}
+let mouseover = false;
+
+let GrappleWebs = [
+];
+
+scene.addEventListener('mousedown',(e)=>{
+ //   alert(JSON.stringify(e))
+    mousedown = {
+        x:e.x,
+        y:e.y
+    }
+    
+})
+scene.addEventListener('mousemove',(e)=>{
+    mouseover = {
+        x:e.x,
+        y:e.y
+    }
+})
+scene.addEventListener('mouseup',(e)=>{
+      recentlyCalculatedGrapple = false;
+    mousedown = false
+    grapplePos = {
+        x:null,
+        y:null,
+    }
+    //reset player rotation
+    player.rotation = 0
+})
+const wall = new Game.GameObject2D({
+        width:scene.center.x*4,
+        height:15,
+        type:'box2d'
+    },{
+        color:'brown'
+    },{
+        x:-scene.center.x*2,
+        y:scene.center.y-40
+        
+    })
+    const wallA = new Game.GameObject2D({
+        width:15,
+        height:200,
+        type:'box2d'
+    },{
+        color:'brown'
+    },{
+        x:-600,
+        y:scene.center.y-200-15
+        
+    })
+    const wallB = new Game.GameObject2D({
+        width:15,
+        height:200,
+        type:'box2d'
+    },{
+        color:'brown'
+    },{
+        x:200,
+        y:scene.center.y-200-15
+        
+    })
+    const wallT = new Game.GameObject2D({
+        height:15,
+        width:scene.center.x*4-300*2,
+        type:'box2d'
+    },{
+        color:'brown'
+    },{
+        x:300-scene.center.x*2,
+        y:200-scene.center.y
+        
+    })
+    
+    player.elasticity = 0.000000001
+    
+    wallA.elasticity = 0.5
+    wallB.elasticity = 0.5
+    wall.elasticity = 0.5
+    wallT.elasticity = 0.5
+    wallA.immovable = true;
+    scene.add(wallA)
+    wallB.immovable = true;
+    scene.add(wallB)
+    wall.immovable = true;
+    scene.add(wall)
+    wallT.immovable = true
+    scene.add(wallT)
+    
+    const objects = []
+    const spawnObjectIfNoCollide = (
+        velocity = {x:0,y:0},
+    x=Math.random() * scene.center.x*2,
+y= Math.random() * scene.center.y*2)=>{
+
+
+    const object = new Game.GameObject2D({
+        width:30,
+        height:30,
+        type:'box2d'
+        
+    },{
+        color:'grey'
+    },{
+        x:x-scene.center.x,
+        y:y-scene.center.y
+    })
+    let isColliding = false;
+    objects.forEach((object2)=>{
+        if (object.isCollidingWith(object2).collided
+        || object.isCollidingWith(player).collided) {
+            isColliding = true
+        }
+    })
+    if (!isColliding) {
+
+
+        object.velocity = velocity
+
+    scene.add(object)
+    objects.push(object)
+    } else {
+        requestAnimationFrame(spawnObjectIfNoCollide)
+    }
+    }
+  
+for (let i = 0; i < 3; i++) {
+spawnObjectIfNoCollide()
+}
+function calculateAngleFromPoss(obj1x, obj1y, obj2) {
+            const dx = obj2.x - obj1x;
+            const dy = obj2.y - obj1y;
+            return Math.atan2(dy, dx)+Math.PI;
+        }
+const castRay = (start, angle, objects)  => {
+    const maxDistance = 2000; // Maximum distance a ray can travel
+            const stepSize = 1; // Step size for the ray to move forward
+            let distance = 0;
+        
+            let ray = {
+                x: start.x,
+                y: start.y,
+                angle: angle,
+                distance: 0
+            };
+        
+            while (distance < maxDistance) {
+                distance += stepSize;
+                const nextX = ray.x + Math.cos(angle) * stepSize;
+                const nextY = ray.y + Math.sin(angle) * stepSize;
+        
+                // Check for collisions with objects
+                let collided = false;
+                for (const obj of objects) {
+                    if (isPointCollidingWithObject(nextX, nextY, obj)
+                ) {
+                        ray.x = nextX;
+                        ray.y = nextY;
+                        ray.distance = distance;
+                        collided = true;
+                        break;
+                    } else if (nextX == 0) {
+                        ray.x = nextX - 100;
+                        ray.y = nextY;
+                        ray.distance = distance;
+                        collided = true;
+                        break;
+                    }
+                }
+        
+                if (collided) break;
+        
+                ray.x = nextX;
+                ray.y = nextY;
+                ray.distance = distance;
+                
+                //return nothing if not collided
+                if (distance == maxDistance) {
+                    ray.x = null
+                    ray.y = null
+                    ray.distance = null;
+                }
+            }
+        
+            return ray;
+}
+let Oncollided = false;
+player.onCollide = (collision)=>{
+Oncollided = collision;
+}
+scene.addEventListener('keypress',(e)=>{
+ if (e.key == 'Enter'){
+    spawnObjectIfNoCollide({
+        x:4,
+        y:-1,
+    },
+-250,
+400);
+ }
+})
+      
+Game.onRender = (ctx)=>{
+
+    ctx.drawCircle = (centerX,centerY,radius, borderWidth=0)=>{
+            ctx.beginPath();
+          ctx.arc(centerX, centerY, radius,0, 2 * Math.PI,false);
+          
+          ctx.fill();
+          if (borderWidth > 0) {
+          ctx.lineWidth = borderWidth;
+          
+          ctx.stroke();
+          
+          }
+          };
+          //#----------------------------------------------------------------
+
+
+
+
+    const angle = 
+    calculateAngleFromPoss(mousedown.x,mousedown.y,player.getCenter())
+    const pos = castRay(player.getCenter(),
+angle,
+[
+    wall,
+    wallA,
+    wallB,
+    wallT,
+    ...objects])
+
+
+if (pos.x == null) {
+    mousedown.x = mouseover.x
+    mousedown.y = mouseover.y
+   
+} else {
+
+if (!recentlyCalculatedGrapple) {
+      recentlyCalculatedGrapple = true
+      grapplePos.distance = pos.distance - 20
+      grapplePos.x = pos.x
+grapplePos.y = pos.y
+
+
+}
+    
+    ctx.strokeStyle = 'white'
+    ctx.beginPath()
+    ctx.moveTo(player.getCenter().x+scene.center.x-camera.x,player.getCenter().y+scene.center.y-camera.y)
+    ctx.lineTo(pos.x+scene.center.x-camera.x,pos.y+scene.center.y-camera.y)
+    ctx.closePath()
+    ctx.stroke()
+    mousedown.x = pos.x
+    mousedown.y = pos.y
+
+    //rotate the player
+    //?Maybe
+    //*player.rotation = angle* 180/Math.PI
+}
+if (GrappleWebs.length > 0) {
+    //*render its web's or lines idk
+    ctx.strokeStyle = 'white'
+ctx.lineWidth = 2
+
+ 
+
+    GrappleWebs.forEach((web,i)=>{
+        ctx.fillStyle = 'white'
+        ctx.drawCircle(web.x+scene.center.x-camera.x, web.y+scene.center.y-camera.y, 4,)
+
+        ctx.beginPath()
+        if (i % 2 == 1) {
+        if (i < 1) {
+        ctx.moveTo(GrappleWebs[0].x+scene.center.x-camera.x,GrappleWebs[0].y+scene.center.y-camera.y)
+        } else {
+            ctx.moveTo(GrappleWebs[i-1].x+scene.center.x-camera.x,GrappleWebs[i-1].y+scene.center.y-camera.y)
+        }
+        ctx.lineTo(web.x+scene.center.x-camera.x,web.y+scene.center.y-camera.y)
+    }
+        ctx.closePath()
+        ctx.stroke()
+    })
+
+
+}
+}
+Game.showDevStats()
+let CanJumpIsWeb = false;
+let CanJumpTimer = 0;
+let CanShootWeb = false;
+
+let usedSpaceBar = false;
+setInterval(()=>{
+    let collidedWithAny = false;
+    //gravity
+
+    //cancel gravity if grappling (cause why not)
+      //!Broken
+
+    if (/*!Oncollided*/true) {
+    player.velocity.y += 0.01
+    }
+    if (grapplePos.x && mousedown) {
+
+        player.velocity.x *= 1+ 0.001
+        player.velocity.y *= 1+ 0.001
+
+        Oncollided = false;
+    }
+    objects.forEach(object=>{
+        object.velocity.y += 0.01
+
+        //adjust friction if touching ground or other object
+        objects.forEach(otherObject=>{
+            if (otherObject == object) return
+            if (object.isCollidingWith(otherObject).collided){
+                object.velocity.x *= 0.96
+                object.velocity.y *= 0.96
+                
+            }
+        })
+        if (Math.abs(object.velocity.y) < 0.01) {
+    object.velocity.x *= 0.96
+                object.velocity.y *= 0.96
+                
+}
+
+            //collision detection
+        if (player.isCollidingWith(object).collided){
+             collidedWithAny = true
+        }
+    })
+
+    
+        let speed = 8/100
+    const grapplespeed = 2/100
+const input = scene.getInput()
+const maxspeed = 72/100
+
+    //collision detection
+if (player.isCollidingWith(wall).collided
+||player.isCollidingWith(wallA).collided
+||player.isCollidingWith(wallB).collided
+||player.isCollidingWith(wallT).collided) {
+    collidedWithAny = true
+  
+}
+ 
+    //movement
+
+if (Math.abs(player.velocity.y) < 0.01){
+    player.velocity.x *= 0.96
+    player.velocity.y *= 0.96
+} else {
+    speed *= 0.49
+}
+    
+
+if (input.a) {
+    player.velocity.x =Math.max(-maxspeed,player.velocity.x) - speed
+}
+if (input.d) {
+    player.velocity.x =Math.min(maxspeed,player.velocity.x) + speed
+}
+if (input['space']) {
+   
+
+    if (CanJumpTimer > 30) {
+    if (!grapplePos.x) {
+        if (!CanJumpIsWeb) {
+    player.velocity.y -= 2
+        } else {
+        
+            player.velocity.y -= 1
+        
+        }
+        CanJumpIsWeb = false
+    }
+    } else  if (usedSpaceBar == false) {
+
+        //*bad idea (Since space is already used to pull in grapple)
+       /* if (!mousedown) {
+        mousedown = {
+            x:mouseover.x,
+            y:mouseover.y
+        }
+    }*/
+        
+        usedSpaceBar = true
+    }
+} else {
+    if (usedSpaceBar == true) {
+
+        //*the other part of the bad idea
+      /*  recentlyCalculatedGrapple = false;
+    mousedown = false
+    grapplePos = {
+        x:null,
+        y:null,
+    }
+    //reset player rotation
+    player.rotation = 0
+   */
+    }
+    usedSpaceBar = false;
+    
+}
+if (Math.abs(player.velocity.y) <= 0.1) {
+    CanJumpTimer += 1;
+} else {
+
+    CanJumpTimer = 0;
+}
+
+
+if (mousedown && grapplePos.x) {
+    
+    if (!CanShootWeb) {
+    player.material.color = 'white'
+    }
+    if (Math.hypot(
+        (player.x + player.velocity.x) - mousedown.x,
+     (player.y + player.velocity.y) - mousedown.y
+    ) < 0) {
+        /*mousedown = false
+        player.velocity = {
+            x:0,
+            y:0
+        }*/
+    } else {
+        if (Math.hypot(player.velocity.x,player.velocity.y)
+         > 0) {
+     
+
+
+    let collidedWithObject = false;
+    //pull any objects the grapple finds
+    objects.forEach(object=>{
+
+       
+
+        if (isPointCollidingWithObject(grapplePos.x,grapplePos.y,object)) {
+
+        
+                    
+                    
+                                                            
+            object.increaseVelocityToward(mouseover,grapplespeed)
+
+            object.velocity.y -= 0.01
+
+            grapplePos.x = object.getCenter().x+object.velocity.x
+grapplePos.y = object.getCenter().y+object.velocity.y
+mousedown.x = object.getCenter().x+object.velocity.x
+mousedown.y = object.getCenter().y+object.velocity.y
+                    
+
+
+
+            collidedWithObject = true
+        }
+    })
+    //pull the player toward the grapple
+    if (!collidedWithObject || input['space']) {
+          if (Math.hypot(player.x-grapplePos.x,player.y-grapplePos.y) > grapplePos.distance
+             ) {
+                
+                if (!input['space']) {
+        player.increaseVelocityToward(grapplePos,
+        grapplespeed+(
+     0.001*(Math.hypot(player.x-grapplePos.x,player.y-grapplePos.y) 
+        -grapplePos.distance)
+    ))
+
+    //*idk how but this makes spamming, go VROOOOOOOOOM
+
+    //and it makes going around corners make "input['space']" useless
+
+    player.increaseVelocityToward(mousedown,grapplespeed)
+                }
+                }
+          if (input['space']) {
+           player.increaseVelocityToward(grapplePos,grapplespeed/0.5)
+                grapplePos.distance -= 2
+
+                player.velocity.x *= 1.0001
+                player.velocity.y *= 1.0001
+          }
+          if (player.x > grapplePos.x) {
+          player.increaseVelocityRight( -0.008)
+          } else {
+            player.increaseVelocityRight( 0.008)
+          }
+
+         }
+    }
+}
+
+
+
+
+
+
+}
+if (!grapplePos.x && !mousedown) {
+    player.material.color = '#7CB9E8'
+}
+if (input['t']) {
+    //clear all webs
+    GrappleWebs = []
+}
+if (input['r']) {
+    if (CanShootWeb == false && grapplePos.x) {
+        if (Math.hypot(player.x-grapplePos.x, player.y-grapplePos.y) >0/*< 50*/) {
+        GrappleWebs.push({
+            x:grapplePos.x,
+            y:grapplePos.y
+        })
+        player.material.color = 'purple'
+        console.log(true)
+
+        //make sure there are only 2
+        if (GrappleWebs.length > 2) {
+      //  GrappleWebs.splice(0,1)
+        }
+       
+    }
+    }
+
+        CanShootWeb = true
+      } else {
+        
+        CanShootWeb = false
+      }
+      if (GrappleWebs.length > 1) {
+        GrappleWebs.forEach((web,i)=>{
+            if (i ==  0) return
+            if (i % 2 !== 1) return
+
+            function calculateWeb(thing) {
+    const x1 = GrappleWebs[i-1].x
+    const y1 = GrappleWebs[i-1].y
+    const x2 =GrappleWebs[i].x
+    const y2 = GrappleWebs[i].y
+
+    const rx = thing.x
+    const ry = thing.y
+    const rw = thing.width
+    const rh = thing.height
+  // check if the line has hit any of the rectangle's sides
+  // uses the Line/Line function below
+  const left =   lineLine(x1,y1,x2,y2, rx,ry,rx, ry+rh);
+  const right =  lineLine(x1,y1,x2,y2, rx+rw,ry, rx+rw,ry+rh);
+  const top =    lineLine(x1,y1,x2,y2, rx,ry, rx+rw,ry);
+  const bottom = lineLine(x1,y1,x2,y2, rx,ry+rh, rx+rw,ry+rh);
+
+  // if ANY of the above are true, the line
+  // has hit the rectangle
+  if (left || right || top || bottom) {
+  
+    
+  }
+
+ function lineLine(x1, y1,  x2, y2,  x3,  y3,  x4, y4) {
+
+// calculate the direction of the lines
+const uA = ((x4-x3)*(y1-y3) - (y4-y3)*(x1-x3)) / ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1));
+const uB = ((x2-x1)*(y1-y3) - (y2-y1)*(x1-x3)) / ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1));
+
+// if uA and uB are between 0-1, lines are colliding
+if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+
+  // optionally, draw a circle where the lines meet
+  const intersectionX = x1 + (uA * (x2-x1));
+    const intersectionY = y1 + (uA * (y2-y1));
+
+    if (thing.getCenter().y < intersectionY) {
+        if (!input['s'] || (thing.x !== player.x && thing.y !== player.y)) {
+            if (!(thing.x !== player.x && thing.y !== player.y)) { 
+                //if player
+        thing.velocity.y = Math.min(thing.velocity.y,0/*To Make Bouncy*/ /*-0.3*/)
+
+             //reduce it greatly to stop major bouncing
+             thing.velocity.y *= 0.98
+
+        thing.increaseVelocityTowardOnlyAffectY({x:intersectionX,y: intersectionY},-0.05); //
+        thing.increaseVelocityToward({x:intersectionX,y: intersectionY},-0.01)
+
+
+        //player's rotation will look at the intersection coordinates
+
+
+
+            } else {
+//if object
+  thing.velocity.y *= thing.velocity.y>0?-1*0.8:1//Math.min(thing.velocity.y,0/*To Make Bouncy*/ /*-0.3*/)
+                
+                //reduce it greatly to stop major bouncing
+                thing.velocity.y *= 0.98
+                thing.increaseVelocityToward({x:intersectionX,y: intersectionY},-0.01); //
+            }
+           
+    
+        //!Buggy
+ //   CanJumpTimer = 31
+    //CanJumpIsWeb = true;
+        }
+    }
+
+   
+
+    
+  return true;
+}
+return false;
+}
+            }
+            calculateWeb(player)
+            objects.forEach(object=>calculateWeb(object));
+        })
+      }
+
+
+camera.setPosition(player.x,player.y)
+
+    
+},1)
+
+
+
+
+} catch (e) {
+    alert(e)
+}
+
+    </script>
+    
+</body>
+</html>

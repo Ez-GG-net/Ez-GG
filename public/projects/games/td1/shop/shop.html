@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tower Defense Shop</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #121212;
+      color: #fff;
+    }
+
+    .shop {
+      display: grid;
+      
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12.8px; /* 16px * 0.8 */
+      width: 100%;
+      height: 82%;
+      position: fixed;
+      top: 1.6%; /* 2% remains the same */
+      max-width: 480px; /* 600px * 0.8 */
+      background: #1e1e1e;
+      padding: 12.8px; /* 16px * 0.8 */
+      border-radius: 6.4px; /* 8px * 0.8 */
+      box-shadow: 0 3.2px 4.8px rgba(0, 0, 0, 0.3); /* 0 4px 6px * 0.8 */
+      overflow-y: scroll;
+      scrollbar-width: none; /* For Firefox */
+      -ms-overflow-style: none; /* For Internet Explorer and Edge */
+        }
+
+        .shop::-webkit-scrollbar {
+      display: none; /* For Chrome, Safari, and Opera */
+    }
+
+    .shop-item {
+      text-align: center;
+      border: 0.8px solid #333; /* 1px * 0.8 */
+      border-radius: 6.4px; /* 8px * 0.8 */
+      padding: 7.4px; /* 8px * 0.8 */
+      background: #2a2a2a;
+      position: relative;
+      overflow: visible;
+      display: flex;
+      flex-direction:column;
+      justify-content: space-between;
+    }
+
+    .shop-item img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 5px; /* 4px * 0.8 */
+      background-color: #333;
+    }
+
+    .shop-item h3 {
+      margin: 3.2px 0; /* 4px * 0.8 */
+      font-size: 12.8px; /* 16px * 0.8 */
+      color: #fff;
+    }
+
+    .shop-item .cost {
+      margin: 3.2px 0; /* 4px * 0.8 */
+      font-size: 14.4px; /* 18px * 0.8 */
+      color: #ffffff;
+      background-color: #566cdc;
+      width: 90%;
+      height: 20px; /* 25px * 0.8 */
+      align-self: center;
+      border: 5.2px solid #394ba5; /* 6.5px * 0.8 */
+      border-radius: 8px; /* 10px * 0.8 */
+      padding: 4px 0px; /* 5px * 0.8 */
+      padding-top: 8.8px; /* 11px * 0.8 */
+      font-family: 'Arial';
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+
+    .shop-item .stats {
+      position: absolute;
+      top: 6.4px;/*6.4px; /* 8px * 0.8 */
+      left: 6.4px;/*6.4px; /* 8px * 0.8 */
+      width: calc(100% - 6.4px * 2 - 10px); /* Reduced offset */
+      height: calc(100% - 40px - 6.4px * 2 - ((4px + 0.8px) * 2) - 20px); /* 50px * 0.8 */
+      background: rgba(0, 0, 0, 1);
+      padding:10px 5px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: top;
+      align-items: center;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: 3.2px; /* 4px * 0.8 */
+      overflow-y: auto; /* Enable vertical scrolling */
+      scrollbar-width: thin; /* For Firefox */
+      scrollbar-color: #888 rgba(0,0,0,0); /* Thumb and track colors */
+    }
+
+    .shop-item .stats::-webkit-scrollbar {
+      width: 4px; /* Narrow scrollbar width */
+    }
+
+    .shop-item .stats::-webkit-scrollbar-thumb {
+      background-color: #888; /* Scrollbar thumb color */
+      border-radius: 2px; /* Rounded corners for the thumb */
+    }
+
+    .shop-item .stats::-webkit-scrollbar-track {
+      background-color: transparent; /* Make the track invisible */
+    }
+
+    .shop-item .stats:hover {
+      opacity: 1;
+    }
+
+    .shop-item .stats p {
+      margin: 3.2px 0; /* 4px * 0.8 */
+      font-size: 10.2px; /* 14px * 0.8 */
+      font-family: 'Arial', sans-serif;
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: 0.5px;
+
+    }
+    .shop-item .equipped {
+      position: absolute;
+      top: 0.5em;
+      right: 0.3em;
+      width: 20%;
+     aspect-ratio: 1/1;
+      border-radius: 10%;
+
+      font-size: 20px;
+
+
+      transition: opacity 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="shop">
+    <div class="shop-item">
+      <img src="https://via.placeholder.com/150" alt="Gunner">
+      <div class="cost" data-name="Gunner" data-cost="$0">Gunner</div>
+      <div class="equipped"><i class="fa-regular fa-circle-dot"></i></div>
+      <div class="stats">
+        <p>Damage: 4</p>
+        <p>Range: 10</p>
+        <p>Cooldown: 1s</p>
+        <p>DPS: 4/s</p>
+      </div>
+    </div>
+
+    <div class="shop-item">
+      <img src="https://via.placeholder.com/150" alt="Taser Man">
+      <div class="cost" data-name="Taser Man" data-cost="$3500">Taser Man</div>
+      <div class="equipped"><i class="fa-regular fa-circle-dot"></i></div>
+      <div class="stats">
+        <p>Damage: 0.1</p>
+        <p>Range: 5</p>
+        <p>Cooldown: 0.02s</p>
+        <p>DPS: 5/s</p>
+      </div>
+    </div>
+
+    <div class="shop-item">
+      <img src="https://via.placeholder.com/150" alt="Germenader">
+      <div class="cost" data-name="Germenader" data-cost="$675">Germenader</div>
+      <div class="equipped"><i class="fa-regular fa-circle-dot"></i></div>
+      <div class="stats">
+        <p>Damage: 6</p>
+        <p>Range: 6</p>
+        <p>Cooldown: 2.4s</p>
+        <p>DPS: 2.5/s</p>
+        <h3>Special:</h3>
+        <p>Splash Radius: 5</p>
+      </div>
+    </div>
+
+    <div class="shop-item">
+      <img src="https://via.placeholder.com/150" alt="Jabber">
+      <div class="cost" data-name="Jabber" data-cost="$600">Jabber</div>
+      <div class="equipped"><i class="fa-regular fa-circle-dot"></i></div>
+      <div class="stats">
+        <p>Damage: 2</p>
+        <p>Range: 5</p>
+        <p>Cooldown: 1s</p>
+        <p>DPS: 2/s</p>
+      </div>
+    </div>
+    <div class="shop-item">
+      <img src="https://via.placeholder.com/150" alt="Factory">
+      <div class="cost" data-name="Factory" data-cost="$6500">Factory</div>
+      <div class="equipped"><i class="fa-regular fa-circle-dot"></i></div>
+      <div class="stats">
+        <p>Damage: 1</p>
+        <p>Range: 5</p>
+        <p>Cooldown: 0.8s</p>
+        <p>DPS: 1.25/s</p>
+        <h3>Special:</h3>
+        <p>Spawns Units</p>
+      </div>
+    </div>
+    <div class="shop-item">
+      <img src="https://via.placeholder.com/150" alt="Refreezirator">
+      <div class="cost" data-name="Refreezirator" data-cost="$1300">Refreezirator</div>
+
+      <div class="equipped"><i class="fa-regular fa-circle-dot"></i></div>
+      <div class="stats">
+        <p>Damage: 0</p>
+        <p>Range: 7</p>
+        <p>Cooldown: 1.2s</p>
+        <p>DPS: 0/s</p>
+        <h3>Special:</h3>
+        <p>Freeze Power: 10%</p>
+        <p>Freeze Duration: 0.5s</p>
+      </div>
+    </div>
+    <div class="shop-item">
+      <img src="https://via.placeholder.com/150" alt="Void Annilator">
+      <div class="cost" data-name="Void Annilator" data-cost="$50500">Void Annilator</div>
+ 
+      <div class="equipped"><i class="fa-regular fa-circle-dot"></i></div>
+      <div class="stats">
+        <p>Damage: 85</p>
+        <p>Range: 35</p>
+        <p>Cooldown: 0.5s</p>
+        <p>DPS: 170/s</p>
+        <h3>Special:</h3>
+        <p>Orb Duration: 3s</p>
+        <p>Orb Damage: 1</p>
+        <p>Stun Duration: 2s</p>
+      </div>
+    </div>
+    <div class="shop-item">
+      <img src="https://via.placeholder.com/150" alt="Gattling Gunner">
+      <div class="cost" data-name="Gattling Gunner" data-cost="$8300">Gattling Gunner</div>
+ 
+      <div class="equipped"><i class="fa-regular fa-circle-dot"></i></div>
+      <div class="stats">
+        <p>Damage: 2</p>
+        <p>Range: 15</p>
+        <p>Cooldown: 0.1s</p>
+        <p>DPS: 20/s</p>
+      </div>
+    </div>
+    <div class="shop-item">
+      <img src="https://via.placeholder.com/150" alt="Bombilary">
+      <div class="cost" data-name="Bombilary" data-cost="$9600">Bombilary</div>
+ 
+      <div class="equipped"><i class="fa-regular fa-circle-dot"></i></div>
+      <div class="stats">
+        <p>Damage: 300</p>
+        <p>Range: 30</p>
+        <p>Cooldown: 6s</p>
+        <p>DPS: 50/s</p>
+        <h3>Special:</h3>
+        <p>Splash Radius: 10</p>
+      </div>
+    </div>
+ 
+  </div>
+  <style>
+    .hotbar {
+      position:fixed;
+      bottom:1.5%;
+
+      display: flex;
+  
+      gap:1px;
+
+      width:fit-content;
+      aspect-ratio: 6/1;
+      background-color:#191919;
+      border:6px solid #222;
+      border-radius:15px;
+      
+
+
+      justify-content: center;
+      
+    }
+    .hotbar img {
+     outline:0;
+     border:0;
+
+    }
+
+    .item {
+      position:relative;
+      margin:3px 2px;
+      display:flex;
+      height:calc(90% - 5px*2);
+      width:calc(300px/6 - 5px*2);
+      aspect-ratio:1px/1px;
+      background-color:#2a2a2a;
+      border-radius:10px;
+      
+
+      padding:5px 5px;
+    }
+    .item-image {
+      width:100%;
+      height:100%;
+      background-color:#232323;
+      
+    }
+
+    .balance {
+      position:fixed;
+      top:10px;
+      right:10px;
+      color:rgb(255, 234, 0);
+      font-family: 'Arial';
+      font-size: 20px;
+      padding:10px;
+      border:#222 solid 10px;
+      border-radius: 20px;
+      background-color: #2a2a2a;
+    }
+    #balance-value {
+      color:rgb(245, 255, 47);
+    }
+
+  </style>
+  <p class="balance">Balance:&MediumSpace;$<output id="balance-value">1000</output></p>
+  <div class="hotbar">
+    <div class="item">
+      <img src="" alt="" id="item1" class="item-image"></img>
+    </div>
+    <div class="item">
+      <img src="" alt="" id="item2"class="item-image"></img>
+    </div>
+    <div class="item">
+      <img src="" alt="" id="item3"class="item-image"></img>
+    </div>
+    <div class="item">
+      <img src="" alt="" id="item4"class="item-image"></img>
+    </div>
+    <div class="item">
+      <img src="" alt="" id="item5"class="item-image"></img>
+    </div>
+    <div class="item">
+      <img src="" alt="" id="item6"class="item-image"></img>
+    </div>
+  </div>
+
+  <script src="shop.js"></script>
+</body>
+</html>

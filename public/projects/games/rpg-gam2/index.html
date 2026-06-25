@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="npc.css">
+    <link rel="stylesheet" href="ui.css">
+    <link rel="stylesheet" href="minimap.css">
+
+    <style>
+      
+        @import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+        body {
+            font-family: 'PT Sans', sans-serif;
+            font-weight:600;
+        }
+    </style>
+
+
+    <script src="modules/vector.js"></script>
+    <script src="modules/detections.js"></script>
+    <script src="modules/keydetection.js"></script>
+    <script src="modules/looking.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+    <canvas id="main"></canvas>
+    <div id="ui"><p><i class="fas fa-bolt"></i> Damage: +0.25</p>
+    <!--Button E-->
+    <button id="buttonE" class="interactable">E</button>
+
+    </div>
+</div>
+<div class="dialogue-box" id="dialogueBox">
+    <div class="npc-name">Mysterious NPC</div>
+    <div class="dialogue-text" id="dialogueText">Welcome, traveler. I have been expecting you...</div>
+    <div class="continue">[Click to continue]</div>
+</div>
+<div class="minimap-container">
+    <canvas id="minimapCanvas" class="minimap"></canvas>
+</div>
+
+
+
+<script src="init.js"></script>
+
+<script src="minimap.js"></script>
+
+    <script src="index.js"></script>
+
+
+
+
+    <script src="calculateNPC.js"></script>
+    <!--<script src="calculateShooting.js"></script>-->
+    <script src="calculationPlayer.js"></script>
+    <script src="calculation.js"></script>
+    <script src="start.js"></script>
+
+    <script src="renderFlashlight.js"></script>
+    <script src="render.js"></script>
+
+
+
+</body>
+</html>

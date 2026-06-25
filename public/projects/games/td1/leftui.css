@@ -1,0 +1,163 @@
+
+
+/* Stats Section */
+.leftui .stats {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: auto;
+    padding: 10px;
+    background-color: #333;
+    border: 2px solid #444;
+    border-radius: 8px;
+    color: #ddd;
+    font-size: 14px;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+.leftui .stats .health, 
+.leftui .stats .wave, 
+.leftui .stats .money,
+ .leftui .stats .towerPlace {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    background-color: #444;
+    border-radius: 5px;
+}
+.leftui .stats #healthNumb {
+    color:red;
+}
+.leftui .stats #waveNumb {
+    color:deepskyblue
+}
+.leftui .stats #moneyNumb {
+    color:lightgreen
+}
+.leftui .stats #towerPlaceNumb {
+    color:#ddd
+}
+
+
+/* Upgrades Section */
+.leftui .upgrades {
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    height: 70%;
+    padding: 10px;
+    background-color: #333;
+    border: 2px solid #444;
+    border-radius: 8px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* Upgrade Item */
+.leftui .upgrades .upgrade {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ddd;
+    background-color: #444;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+/* Hover Effects */
+.leftui .upgrades .upgrade:hover {
+    background-color: #555;
+    transform: scale(1.02);
+}
+
+/* Details Box */
+.leftui .upgrades .upgrade .details {
+    position: absolute;
+    display: none;
+    padding: 5px 15px;
+    background-color: #555;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    font-size: 12px;
+    color: #eee;
+    left: 0;
+    top: 0;
+    height: auto;
+    width: calc(100% - 10px - 15px);
+    line-height: 1em;
+    
+}
+
+/* Details Icons */
+.leftui .upgrades .upgrade .details i {
+    margin-right: 3px;
+    color: #ddd;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+/* Show Details on Hover */
+.leftui .upgrades .upgrade:hover .details {
+    display: block;
+}
+
+/* Cost Section */
+.leftui .upgrades .upgrade .cost {
+    font-size: 12px;
+    font-weight: normal;
+    color: #bbb;
+}
+
+
+
+.leftui .towerstats {
+   
+    margin-bottom:-100px;
+    padding:0px 15px;
+    width:100%;
+    left:12px;
+    color:white;
+    font-size: 13px;
+    font-weight: bold;
+    background-color: #555;
+    border: 2px solid #444;
+    border-radius: 8px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+#addingMoney {
+    font-size:14px;
+    color: gold;
+    font-weight: bold;
+    opacity: 0; /* Start invisible */
+    transition: transform 1.0s ease-out, opacity 1.3s ease-out; /* Smooth animation */
+}
+
+
+
+.loading-bar {
+    position: absolute;
+    top: 50px;
+    left: 10px;
+    display: flex;
+    gap: 1px;
+}
+
+.loading-bar .box {
+    width: 10px;
+    height: 10px;
+    border: 1px solid #ccc;
+    border-radius:2px;
+    background-color: #333; /* Default background for empty boxes */
+}
+
+.loading-bar .box.filled {
+    background-color: white;
+}

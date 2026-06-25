@@ -1,0 +1,73 @@
+/* Ability Icon */
+.ability-icon {
+    position: relative;
+    top: calc(90px + 30px); /* Adjust as needed to align with the leftui */
+    left: calc(30px - 8px); /* Push it slightly outside the leftui */
+   
+    width: 120px; /* Square dimensions */
+    height: 120px;
+    background-color: #444; /* Background color for the square */
+    border: 8px solid #2c2c2c; /* Optional border */
+    border-radius: 5px; /* Optional rounded corners */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Optional shadow */
+    cursor: pointer; /* Add hover cursor effect */
+    transition: translate 0.5s;
+}
+
+.ability-icon img {
+    max-width: 80%; /* Scale the image to fit within the square */
+    max-height: 80%;
+    pointer-events: none; /* Prevent accidental interaction with the image */
+}
+
+.ability-icon:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+    translate:0px -15px;
+}
+.ability-icon:active {
+    transform: scale(1.02); /* Slightly shrink on active state */
+    translate:0px -10px;
+}
+.ability-icon .cooldown {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: white;
+    pointer-events: none; /* Prevent accidental interaction with the cooldown */
+    transition: opacity 0.5s;
+}
+.ability-icon .cooldownNumb {
+    font-size: 28px;
+    transition: opacity 0.5s;
+}
+
+.description {
+    opacity:0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width:80%;
+
+    padding: 10px;
+    color: white;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+    pointer-events: none; /* Prevent accidental interaction with the description */
+
+    transition:opacity 0.5s
+}
+.ability-icon:hover .description {
+   opacity:1
+}
+

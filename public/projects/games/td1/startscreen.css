@@ -1,0 +1,97 @@
+
+:root {
+    --bg-primary: #121212;
+    --bg-secondary: #1E1E1E;
+    --text-primary: #E0E0E0;
+    --text-secondary: #B0B0B0;
+    --easy-color: #4CAF50;
+    --medium-color: #FF9800;
+    --hard-color: #F44336;
+    --void-color: 	#6c13a4;
+}
+body {
+
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+  
+    height: 100vh;
+    margin: 0;
+
+    transition: background-color 0.3s, color 0.3s;
+}
+.container {
+    background-color: var(--bg-secondary);
+    border-radius: 12px;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    padding: 30px;
+    width: 300px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+h1 {
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    font-weight: 300;
+}
+.mode-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.mode-btn {
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    background-color: rgba(255,255,255,0.05);
+    border: 5px solid rgba(255,255,255,0.1);
+    
+    font-size:15px;
+}
+.mode-btn:hover {
+    transform: scale(1.03);
+    background-color: rgba(255,255,255,0.1);
+}
+.mode-btn span {
+    opacity: 0.7;
+}
+.easy {
+    background-color: color-mix(in srgb, var(--easy-color) 20%, transparent);
+    border-color: color-mix(in srgb, var(--easy-color) 30%, transparent);
+}
+.medium {
+    background-color: color-mix(in srgb, var(--medium-color) 20%, transparent);
+    border-color: color-mix(in srgb, var(--medium-color) 30%, transparent);
+}
+.hard {
+    background-color: color-mix(in srgb, var(--hard-color) 20%, transparent);
+    border-color: color-mix(in srgb, var(--hard-color) 30%, transparent);
+}
+.void {
+    background-color: color-mix(in srgb, var(--void-color) 20%, transparent);
+    border-color: color-mix(in srgb, var(--void-color) 30%, transparent);
+}
+.easy:hover {
+    background-color: color-mix(in srgb, var(--easy-color) 30%, transparent);
+}
+.medium:hover {
+    background-color: color-mix(in srgb, var(--medium-color) 30%, transparent);
+}
+.hard:hover {
+    background-color: color-mix(in srgb, var(--hard-color) 30%, transparent);
+}
+.void:hover {
+    background-color: color-mix(in srgb, var(--void-color) 30%, transparent);
+}
+
+
+
+.ui {
+    display:none;
+
+}

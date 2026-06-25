@@ -1,0 +1,16 @@
+Done: 
+    Add functionality to rename the elements
+
+Upcoming:
+    Add import button
+    Add camera controls (WASD)
+
+ 
+    
+
+
+       Add a split button to split the elements in half
+
+
+
+THREE DIMENSIONS

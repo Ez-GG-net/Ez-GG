@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="ui.css">
+
+    <style>
+      
+        @import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+        body {
+            font-family: 'PT Sans', sans-serif;
+            font-weight:600;
+        }
+    </style>
+
+
+   
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+    <canvas id="main"></canvas>
+    <div id="uiOverlay"> 
+        <div id="uiBoxLeft">
+            <button class="toggleButton" id="toggleLeft" onclick="toggleBox('leftContent', 'toggleLeft')">▼ Hide</button>
+            <div id="leftContent" class="collapsible">
+                <h2>Edit Rendering</h2>
+                <div id="renderEditor">
+                    RenderFutureAmount: <input type="number" id="renderFuture" value="12" oninput="applyChanges()">
+                    RenderFutureLineWidth: <input type="number" id="renderFutureLine" value="1" oninput="applyChanges()">
+                    TakePerspectiveFrom: <input type="number" id="perspective" value="-1" oninput="applyChanges()"><br>
+                </div>
+            </div>
+        </div>
+        
+        <div id="uiBox">
+            <button class="toggleButton" id="toggleRight" onclick="toggleBox('rightContent', 'toggleRight')">▼ Hide</button>
+            <div id="rightContent" class="collapsible">
+                <h2>Edit Planets</h2>
+                <div id="planetEditor"></div>
+            </div>
+        </div>
+        
+</div>
+
+<script src="modules/vector.js"></script>
+<script src="modules/looking.js"></script>
+<script src="modules/detections.js"></script>
+
+
+<script src="index.js"></script>
+<script src="init.js"></script>
+
+<script src="ui.js"></script>
+
+
+<script src="modules/keydetection.js"></script>
+
+
+
+
+<script src="calculation.js"></script>
+<script src="calculationGravity.js"></script>
+
+    <script src="render.js"></script>
+
+    
+
+    <script src="start.js"></script>
+
+</body>
+</html>

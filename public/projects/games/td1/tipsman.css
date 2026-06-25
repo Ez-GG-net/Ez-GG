@@ -1,0 +1,44 @@
+.tipsMan {
+    opacity:0;
+    display: none;
+    position:absolute;
+    width:calc(80% - 150px);
+    height:150px;
+    flex-direction: column;
+    gap: 5px;
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ddd;
+    background-color: rgba(50,50,50,0.5);
+    border:10px solid rgba(10,10,10,0.5);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: opacity 0.5s;
+    left:50%;
+    padding-left:150px;
+    bottom:25px;
+    transform:translate(-50%);
+
+    pointer-events: none;
+}
+.tipsMan img {
+    position:absolute;
+    width:100px;
+    aspect-ratio: 1/1;
+    border:5px solid rgba(10, 10, 10, 0.5);
+    border-radius:10px;
+    left:12.5px;
+    top:12.5px;
+}
+.tipsMan .name {
+    position:absolute;
+    width:112.5px;
+    aspect-ratio: 1/1;
+   
+    left:12.5px;
+    bottom:-80px;
+    text-align:center;
+    font-size:18px;
+    
+}

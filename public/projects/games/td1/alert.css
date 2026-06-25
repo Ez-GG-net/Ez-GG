@@ -1,0 +1,55 @@
+/* Alert Overlay */
+.alertOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it appears above the canvas */
+  
+    opacity:0;
+    display:none;
+
+    transition: visibility 0s, opacity 0.3s ease; /* Smooth fade-in effect */
+}
+
+/* Alert Box */
+.alertBox {
+    background-color: #c30000;
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    border: 2px solid rgb(0, 0, 0)
+}
+
+.alertBox p {
+    margin: 0 0 15px;
+    font-size: 18px;
+    color: #ffffff;
+}
+
+.alertBox button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.alertBox button:hover {
+    background-color: #0056b3;
+}
+
+/* Show the alert */
+.alertOverlay.active {
+    visibility: visible;
+    opacity: 1;
+}

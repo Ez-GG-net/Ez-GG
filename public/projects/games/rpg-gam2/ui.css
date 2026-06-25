@@ -1,0 +1,21 @@
+#buttonE {
+    position: fixed; /* Stays in place even when scrolling */
+    bottom: 50px; /* Distance from bottom */
+    right: 50px; /* Distance from right */
+    width: 25px;
+    height: 25px;
+    font-size: 9px;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%; /* Makes it a circle */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, background 0.2s;
+}
+
+#buttonE:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}

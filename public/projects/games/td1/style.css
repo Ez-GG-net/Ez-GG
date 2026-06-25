@@ -1,0 +1,72 @@
+/* Reset Body and HTML */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Arial, sans-serif;
+
+    background: linear-gradient(to bottom, #1c0333, #000000);;
+}
+
+/* Main UI Container */
+.ui {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* Left UI Panel */
+.leftui {
+    width: 230px; /* Fixed width */
+    height: 100%; /* Stretch to full height */
+   
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto; /* Enable scrolling for overflow */
+    background-color: #222;
+    border-right: 2px solid #333;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Right UI Panel */
+.rightui {
+    width: 230px; /* Fixed width */
+    height: 100%; /* Stretch to full height */
+    background-color: #222;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto; /* Enable scrolling for overflow */
+}
+
+/* Game Container */
+.gameContainer {
+    flex: 1; /* Take up remaining space between the UI panels */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff; /* Optional background color */
+    border: 5px solid #333; /* Container border */
+    position: relative; /* For canvas centering */
+}
+
+/* Game Canvas */
+#gameCanvas {
+    display: block;
+    max-width: 100%; /* Prevent overflow */
+    max-height: 100%; /* Prevent overflow */
+    aspect-ratio: 1 / 1; /* Maintain square aspect ratio */
+    background-color: #f9f9f9; /* Optional: light background */
+}
+

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Particle Background</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="background"></canvas>
+    <script>
+        const canvas = document.getElementById('background');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const maxParticles = 100;
+        const lineDistance = 150*2;
+
+        const cursor = {
+            x: null,
+            y: null
+        };
+
+        window.addEventListener('mousemove', (event) => {
+            cursor.x = event.clientX;
+            cursor.y = event.clientY;
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.radius = 1.5;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'white';
+                ctx.fill();
+            }
+
+            move() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce off edges
+                if (this.x <= 0 || this.x >= canvas.width) this.vx *= -1;
+                if (this.y <= 0 || this.y >= canvas.height) this.vy *= -1;
+
+                // Move away from cursor
+                if (cursor.x && cursor.y) {
+                    const dx = this.x - cursor.x;
+                    const dy = this.y - cursor.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 75) {
+                        const angle = Math.atan2(dy, dx);
+                        this.x = cursor.x + Math.cos(angle) * 70;
+                        this.y = cursor.y + Math.sin(angle) * 70;
+
+                        
+                    }
+                
+                    const wantedSpeed = 0.5
+                    const adjustRate = 0.01
+
+                    //gradually adjust the velocity to the wantedspeed value by the adjustRate
+
+                    
+               
+                }
+            }
+
+            connect() {
+                particles.forEach((particle) => {
+                    const dx = this.x - particle.x;
+                    const dy = this.y - particle.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < lineDistance) {
+                        ctx.beginPath();
+                        ctx.moveTo(this.x, this.y);
+                        ctx.lineTo(particle.x, particle.y);
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${(0.4 - distance / lineDistance)})`;
+                        ctx.stroke();
+                    }
+                });
+            }
+        }
+
+        // Initialize particles
+        for (let i = 0; i < maxParticles; i++) {
+            particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'black'
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach((particle) => {
+                particle.move();
+                particle.draw();
+                particle.connect();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+.advancedControls {
+    position:fixed;
+    top:0.5rem;
+    right:0.5rem;
+    background-color:rgb(0, 64, 4);
+    padding:1rem;
+   width:5rem;
+   height:20rem;
+
+
+}
+.advancedPlanetControls {
+    position:fixed;
+    top:0.5rem;
+    left:0.5rem;
+    background-color:rgb(0, 64, 4);
+    padding:1rem;
+   width:5rem;
+   height:20rem;
+
+
+}
+.maxSpeedLabel {
+    position:absolute;
+    left: 0.85rem;
+    top: 2.5em;
+    width: 90%;
+    font-size: 0.8rem;
+}
+
+.maxSpeed {
+    position:absolute;
+    left: 4.85rem;
+    top: 2.2em;
+    width: 25%;
+}
+.startVelocityLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 4em;
+    width: 90%;
+    font-size: 0.82rem;
+        /*underline*/
+        text-decoration: underline;
+}
+.startVelocitySideLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 5.2em;
+    width: 70%;
+    font-size: 0.8rem;
+}
+.startVelocityX {
+    position:absolute;
+    left: 4.0rem;
+    top: 6.1em;
+    width: 35%;
+}
+.startVelocityY {
+    position:absolute;
+    left: 1rem;
+    top: 6.1em;
+    width: 35%;
+}
+.objectSizeLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 0.8em;
+    width: 90%;
+    font-size: 0.8rem;
+}
+.objectSize {
+    position:absolute;
+    left: 4.5rem;
+    top: 0.5em;
+    width: 30%;
+}
+.planetSizeLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 0.75em;
+    width: 90%;
+    font-size: 0.8rem;
+}
+
+.planetSize {
+    position:absolute;
+    left: 4.5rem;
+    top: 0.5em;
+    width: 25%;
+}
+.planetColorLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 2.7em;
+    width: 90%;
+    font-size: 0.8rem;
+}
+
+.planetColor {
+    position:absolute;
+    left: 4.95rem;
+    top: 2.2em;
+    width: 25%;
+}
+.antiPlanetColorLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 4.2em;
+    width: 90%;
+    font-size: 0.8rem;
+}
+
+.antiPlanetColor {
+    position:absolute;
+    left: 4.95rem;
+    top: 3.7em;
+    width: 25%;
+}
+
+.ModeColorLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 7.5em;
+    width: 90%;
+    font-size: 0.95rem;
+    /*underline*/
+    text-decoration: underline;
+}
+.defaultModeColorLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 10.3em;
+    width: 75%;
+    font-size: 0.8rem;
+}
+.defaultModeColor1 {
+    position:absolute;
+    left: 4.2rem;
+    top: 10.8em;
+    width: 35%;
+}
+
+.defaultModeColor2 {
+    position:absolute;
+    left: 1rem;
+    top: 10.8em;
+    width: 35%;
+}
+
+.speedModeColorLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 12.8em;
+    width: 90%;
+    font-size: 0.85rem;
+}
+
+.speedModeColor3 {
+    position:absolute;
+    left: 4.6rem;
+    top: 14.2em;
+    width: 25%;
+}
+
+.speedModeColor1 {
+    position:absolute;
+    left: 1rem;
+    top: 14.2em;
+    width: 25%;
+}
+.speedModeColor2 {
+    position:absolute;
+    left: 2.8rem;
+    top: 14.2em;
+    width: 25%;
+}
+.livedModeColorLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 16.2em;
+    width: 90%;
+    font-size: 0.85rem;
+}
+
+.livedModeColor1 {
+    position:absolute;
+    left: 4.2rem;
+    top: 17.6em;
+    width: 35%;
+}
+.livedModeColor2 {
+    position:absolute;
+    left: 1rem;
+    top: 17.6em;
+    width: 35%;
+}
+
+.drawLineVLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 19.6em;
+    width: 90%;
+    font-size: 0.85rem;
+}
+.drawLineV {
+    position:absolute;
+    left: 4.5rem;
+    top: 19.99em;
+    width: 25%;
+}
+.drawLinePLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 22em;
+    width: 90%;
+    font-size: 0.85rem;
+}
+
+.drawLineP {
+    position:absolute;
+    left: 4.5rem;
+    top: 22.39em;
+    width: 25%;
+}

@@ -1,0 +1,258 @@
+body {
+    margin:0;
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+}
+.backgroundCanvas {
+    width: 100vw;
+    height: 100vh;
+
+    z-index:-1;
+    opacity:0.1
+}
+.maincanvas {
+z-index:20000
+}
+.start {
+    position:fixed;
+    top:0.5rem;
+    left:calc(100vw - 0.5rem - 3rem)
+}
+.spawnAll {
+    position:fixed;
+    top:0.5rem;
+   right: 3.6rem;
+}
+.removeAll {
+    position:fixed;
+    top:7.5rem;
+    left:calc(100vw - 0.5rem - 6rem)
+}
+
+.stopAll {
+    position:fixed;
+    top:9rem;
+    left:calc(100vw - 0.5rem - 6rem)
+}
+
+.controls {
+    position:fixed;
+    top:0.5rem;
+    right:0.5rem;
+    background-color:rgb(69, 69, 69);
+    padding:1rem;
+   width:5rem;
+   height:20rem;
+}
+.options {
+    position:fixed;
+    top:0.5rem;
+    left:0.5rem;
+    background-color:rgb(69, 69, 69);
+    padding:1rem;
+   width:5rem;
+   height:10rem;
+}
+.sizePlanet {
+    position:absolute;
+    left: 2rem;
+    width: 60%
+}
+.spawnAmount {
+    position:absolute;
+    left: 0.5rem;
+    width: 80%
+}
+.spawnDelay {
+    position:absolute;
+    left: 0.5rem;
+    width: 80%
+}
+label {
+    font-weight:bold;
+    color:rgb(216, 208, 255);
+}
+.hideAllPlanets {
+    position:fixed;
+    top:8.5rem;
+    left:1rem;
+}
+.removeAllPlanets {
+    position:fixed;
+    top:7rem;
+    left:1rem;
+}
+.useAnti {
+    position:absolute;
+    left: 3rem;
+    top: 11.5em;
+    width: 80%;
+}
+.useAntiLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 12em;
+    width: 90%;
+    font-size: 0.8rem;
+}
+.friction {
+    position:absolute;
+    left: 0.5rem;
+    top: 13em;
+    width: 80%
+}
+.frictionLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 9.5em;
+    width: 80%
+}
+.frictionOutput {
+    position:absolute;
+    left: 0.5rem;
+    top: 11.7em;
+    width: 80%;
+    color: white;
+    
+}
+.timelapse {
+    position:absolute;
+    left: 0.5rem;
+    top: 17em;
+    width: 80%
+}
+.timelapseLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 13em;
+    width: 80%
+}
+.timelapseOutput {
+    position:absolute;
+    left: 0.5rem;
+    top: 15em;
+    width: 80%;
+    color: white;
+}
+.stats {
+    position:fixed;
+    bottom:0.5rem;
+    left:0.5rem;
+    background-color:rgb(69, 69, 69);
+    padding:1rem;
+   width:8rem;
+   height:2rem;
+}
+.avgSpeed {
+    color: white;
+}
+.wallCollision {
+    position:absolute;
+    left: 3.5rem;
+    top: 20.1em;
+    width: 80%;
+}
+.wallCollideLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 21em;
+    width: 90%;
+    font-size: 0.8rem;
+}
+.useNew {
+    position:absolute;
+    left: 3rem;
+    top: 25.1em;
+    width: 55%;
+    font-size:0.7rem;
+}
+.useNewLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 22em;
+    width: 90%;
+    font-size: 0.8rem;
+}
+.recordPos {
+    position: absolute;
+    left: 3.5rem;
+    top: 23.3em;
+    width: 80%;
+}
+.recordPosLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 24.5em;
+    width: 90%;
+    font-size: 0.8rem;
+}
+.objectShowSpeed {
+    position: absolute;
+    left: 4.5rem;
+    top: 29.3em;
+    width: 50%;
+    font-size: 0.7rem;
+}
+.objectShowSpeedLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 25.6em;
+    width: 90%;
+    font-size: 0.8rem;
+}
+.showStart {
+    position:absolute;
+    left: 3.5rem;
+    top: 22.4em;
+    width: 80%;
+}
+.showStartLabel {
+    position:absolute;
+    left: 0.5rem;
+    top: 23.3em;
+    width: 90%;
+    font-size: 0.8rem;
+}
+.export {
+    position: fixed;
+    right: 0.3rem;
+    bottom: 5rem;
+  
+}
+.import {
+    position: fixed;
+    right: 0.3rem;
+    bottom: 6.7rem;
+    color: rgb(0, 0, 0);
+    font-weight:normal;
+    background-color: rgb(219, 219, 219);
+    padding: 0.1rem 0.3rem;
+    border: 0.01rem solid black
+}
+.import:hover {
+    filter:brightness(0.8)
+}
+.import:active {
+    filter:brightness(1.2)
+}
+.ui {
+    width:100vw;
+    height:100vh;
+}
+.hideUi {
+    position: fixed;
+    right: 0.3rem;
+    bottom: 0.3rem;
+  
+}
+.pause {
+    position: fixed;
+    right: 0.3rem;
+    bottom: 1.8rem;
+}
+.advancedUIBtn {
+    position: fixed;
+    right: 0.3rem;
+    bottom: 3.5rem;
+}

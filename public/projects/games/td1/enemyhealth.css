@@ -1,0 +1,38 @@
+/* Freely Movable Enemy Health Display */
+.enemy-health {
+    position: fixed; /* Fixed positioning for free movement */
+    top: 50px; /* Adjust vertical position */
+    left: 50px; /* Adjust horizontal position */
+    display: none;
+    align-items: center;
+    padding: 5px 15px;
+    background-color: #222; /* Dark background */
+    color: #fff; /* White text */
+    border: 2px solid #444; /* Subtle border */
+    border-radius: 8px; /* Rounded corners */
+    font-size: 14px; /* Font size for text */
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Shadow for a 3D effect */
+    gap: 10px; /* Space between "Health" and value */
+    cursor: grab; /* Visual cue for dragging */
+    z-index: 1000; /* Ensure it stays on top */
+}
+.enemy-immunes {
+    font-size:10px;
+    color:#656565
+}
+/* Label Styling */
+.enemy-health .label {
+    color: #ddd; /* Slightly muted for the "Health" text */
+}
+
+/* Value Styling */
+.enemy-health .value {
+    color: #ff4d4d; /* Highlighted red for the health number */
+    font-size: 16px; /* Slightly larger for emphasis */
+}
+
+/* Active Dragging State */
+.enemy-health:active {
+    cursor: grabbing; /* Change cursor during drag */
+}

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>planet sim</title>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/fluid-canvas@latest"></script>
+
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="advancedUI.css">
+</head>
+<body>
+
+    <canvas class="maincanvas"></canvas>
+    <script src="index.js"></script>
+    <div class="ui">
+        <div class="basicUI">
+    <div class="controls">
+        <label for="spawnAmount">Spawn Amount</label><br>
+        <input type="number" class="spawnAmount" value="20" min="1" max="200000">
+        <label for="spawnDelay">Spawn Delay</label><br>
+        <input type="number" class="spawnDelay" value="5" min="1">
+        <label for="friction" class="frictionLabel">Friction</label><br>
+        <input type="range" class="friction" min="0" max="1" step="0.00001" value="0">
+        <output class="frictionOutput" >0</output>
+
+        <label for="timelapse" class="timelapseLabel">Timelapse</label><br>
+        <input type="range" class="timelapse" min="0.1" max="20" step="0.1" value="0">
+        <output class="timelapseOutput" >1</output>
+
+        <label for="wallCollision" class="wallCollideLabel">Wall Collision</label>
+        <input type="checkbox" class="wallCollision" >
+        <label for="useNew" class="useNewLabel">Physics</label>
+        <select name="cars" class="useNew">
+            <option value="default">Default</option>
+            <option value="beta">Beta</option>
+            <option value="optimised">Repeat/Optimised</option>
+            <option value="constant">Constant</option>
+          </select>
+        <label for="showStart" class="showStartLabel">Show Start Pos</label>
+        <input type="checkbox" class="showStart" >
+        <label for="recordPos" class="recordPosLabel">Draw Last Pos</label>
+        <input type="checkbox" class="recordPos" >
+        <label for="objectShowSpeed" class="objectShowSpeedLabel">Color Mode</label>
+        
+        <select class="objectShowSpeed" >
+            <option value="default">Default</option>
+            <option value="speed">Speed</option>
+            <option value="life">Lived</option>
+        </select>
+     
+ 
+    </div>
+
+    <div class="options">
+        <label for="planetColor">Mass <br>(Per Bil Ton)</label><br>
+        <input type="text" class="sizePlanet" value="10"><br>
+        <button class="removeAll">RemoveAll</button>
+        <button class="stopAll">StopSpawning</button>
+        <button class="hideAllPlanets">ToggleVisible</button>
+        <button class="removeAllPlanets">RemoveAll</button>
+        <label for="useAnti" class="useAntiLabel">Anti Planet</label>
+        <input type="checkbox" class="useAnti" >
+    </div>
+    <div class="stats">
+        <label for="avgSpeed">Avg Speed:</label>
+        <output class="avgSpeed">0 (Mile's Per Sec)</output>
+    </div>
+    <button class="start">Spawn</button>
+<button class="spawnAll">SpawnAll</button>
+</div>
+
+<button class="export">Export</button>
+<label for="importbtn" class="import">Import</label>
+<input type="file" name="" id="importbtn" style="display:none" >
+    <button class="pause">Pause</button>
+   <button class="advancedUIBtn">Advanced UI</button>
+    <div class="advancedUI">
+        <div class="advancedControls">
+            <label for="objectSize" class="objectSizeLabel">Object Size</label>
+            <input type="number"class="objectSize" value="8" min="0.1">
+            <label for="maxSpeed"class="maxSpeedLabel">Max Speed</label><br>
+            <input type="number" class="maxSpeed" value="-1" min="-1">
+            <label for="startVelocity" class="startVelocityLabel">Start Velocity </label>
+            <label for="startVelocity" class="startVelocitySideLabel">(X, Y)</label>
+            <input type="number" class="startVelocityY" value="6">
+            <input type="number" class="startVelocityX" value="6">
+           
+            <label for="" class="ModeColorLabel">Color Gradient</label>
+
+            <label for="" class="defaultModeColorLabel">Default Mode</label>
+            <input type="color"class="defaultModeColor1"value=#f187fb>
+            <input type="color" class="defaultModeColor2"value=#439cfb>
+
+            <label for="speedModecolor" class="speedModeColorLabel">Speed (0-∞)</label>
+            <input type="color" class="speedModeColor1"value=#ff0000>
+            <input type="color" class="speedModeColor2"value=#00ff00>
+            <input type="color" class="speedModeColor3"value=#0000ff>
+         
+            <label for="" class="livedModeColorLabel">Lived Mode</label>
+            <input type="color" class="livedModeColor1" value=#8000ff>
+            <input type="color" class="livedModeColor2" value="#07f49e">
+
+            <label for="recordPos" class="drawLineVLabel">Draw Line's Velocity</label>
+            <input type="checkbox" class="drawLineV" >
+            <label for="recordPos" class="drawLinePLabel">Draw Line's Planet</label>
+            <input type="checkbox" class="drawLineP" >
+         
+        </div>
+        <div class="advancedPlanetControls">
+            <label for="planetSize" class="planetSizeLabel">Planet Size</label>
+            <input type="number" class="planetSize" value="20" min="0.1">
+            <label for="planetColor" class="planetColorLabel">Planet Color</label><br>
+            <input type="color" class="planetColor" value="#02abe3">
+            <label for="antiPlanetColor" class="antiPlanetColorLabel">Anti Planet Color</label>
+            <input type="color" class="antiPlanetColor" value="#FF0000">
+        </div>
+    </div>
+</div>
+<button class="hideUi">Hide UI</button>
+
+</body>
+</html>

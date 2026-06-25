@@ -1,0 +1,16 @@
+/* Resizing border and points */
+.resize-border {
+    position: absolute;
+    border: 3px solid rgba(0, 157, 255, 0.7); /* Yellow border */
+    pointer-events: none; /* Don't interfere with mouse events */
+}
+
+.resize-point {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: rgba(0,0,255,0.5); /* Red color for resize points */
+    border-radius: 10%;
+    cursor: pointer;
+  
+}
