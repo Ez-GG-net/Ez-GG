@@ -2,12 +2,16 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="Contact" description="Suggest any feedback or requests and we will get back to you">
+<BaseLayout
+  title="Contact"
+  description="Suggest any feedback or requests and we will get back to you"
+>
   <section class="project-page">
     <p class="eyebrow">Contact us</p>
     <h1>Contact our team</h1>
     <p class="intro">
-      Suggest any feedback or requests and we will get back to you as soon as possible.
+      Suggest any feedback or requests and we will get back to you as soon as
+      possible.
     </p>
   </section>
 
@@ -17,16 +21,30 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
         <span class="card-badge">Email</span>
         <h3>Email us for issues or feedback</h3>
         <p>
-          <strong>support@ez-gg.net</strong>
+          <a href="mailto:support@ez-gg.net">
+            <strong>support@ez-gg.net</strong>
+          </a>
         </p>
       </div>
       <div class="category-link">
         <span class="card-badge">Github</span>
         <h3>Find us on Github</h3>
-            <p>
-              <strong>github.com/Ez-GG</strong>
-            </p>
+        <p>
+          <a href="https://github.com/Ez-GG">
+            <strong>github.com/Ez-GG</strong>
+          </a>
+        </p>
       </div>
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .category-link p a {
+    text-decoration: none;
+    transition: color 180ms ease;
+  }
+  .category-link p a:hover {
+    color: var(--text);
+  }
+</style>
