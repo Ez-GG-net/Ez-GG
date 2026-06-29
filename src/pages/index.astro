@@ -1,8 +1,54 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+
+const categories = [
+  { title: "Games", href: "/projects/games/", icon: "fa-solid fa-gamepad", description: "Play fun games and prototypes." },
+  { title: "AI", href: "/projects/ai/", icon: "fa-solid fa-brain", description: "Browse AI experiments, utilities, and demos." },
+  { title: "Simulations", href: "/projects/simulations/", icon: "fa-solid fa-vial-virus", description: "Run simulations and systems experiments." },
+  { title: "Tools", href: "/projects/tools/", icon: "fa-solid fa-wrench", description: "Explore productivity tools and helpers, built for development." },
+];
 ---
 
-<BaseLayout title="Home">
-  <h1>Ez-GG</h1>
-  <p>Games, AI, simulations, and experiments.</p>
+<BaseLayout title="Ez-GG" description="A network of projects built for the web, focusing on practicality, simplicity, and ease of use">
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-copy reveal">
+        <h1>Ez-GG</h1>
+        <p>
+          A network of projects built for the web, focusing on practicality, simplicity, and ease of use.
+        </p>
+
+        <div class="hero-actions">
+          <a class="button" href="/projects">
+            <i class="fa-solid fa-arrow-right"></i>
+            Explore projects
+          </a>
+          <a class="button-secondary" href="/about">
+            <i class="fa-regular fa-id-card"></i>
+            About Ez-GG
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal">
+    <SectionHeading
+      eyebrow="Categories"
+      title="Everything in one place"
+      description="Tap any category to see the projects inside."
+    />
+
+    <div class="grid cards-2">
+      {categories.map((category) => (
+        <a class="category-link" href={category.href}>
+          <span class="card-badge"><i class={category.icon}></i> {category.title}</span>
+          <h3>{category.title}</h3>
+          <p>{category.description}</p>
+          
+        </a>
+      ))}
+    </div>
+  </section>
 </BaseLayout>

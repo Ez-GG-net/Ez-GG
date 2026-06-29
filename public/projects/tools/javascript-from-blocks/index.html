@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html style="margin: 0;height: 100vh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Javascript from Blocks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=M+PLUS+1+Code:wght@100..700&family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/scroll.css">
+    <link rel="stylesheet" href="./css/jsStyle.css">
+    <link rel="stylesheet" href="./css/blocks.css">
+    <link rel="stylesheet" href="./css/projprev.css">
+</head>
+<body style="margin:0; height: 100vh">
+
+    <div class="canvasborder"></div>
+    <div class='canvasouter'style="width: calc(100vh); height:100vh; position:fixed;left:calc(50vw - 50vh); overflow:hidden">
+    
+<canvas id="myCanvas" width="100" height="100" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML canvas tag.</canvas>
+<div class="left sidePanel">
+    <div class="items">
+    <img class="item" src="blocks/flagclick.png">
+    <img class="sayB item" src="blocks/log.png">
+   <!-- <img class="varset item" src="blocks/var/set.svg">
+    <img class="varchange item" src="blocks/var/change.svg">-->
+    <img class="move item" src="blocks/move.svg">
+    <img class="gotoXY item" src="blocks/move/gotoXY.svg">
+    <img class="pointdirection item" src="blocks/move/pointdirection.svg">
+    <img class="turnCW item" src="blocks/move/turnCW.svg">
+    <img class="turnCCW item" src="blocks/move/turnCCW.svg">
+    <img class="glidetoXY item" src="blocks/move/glidetoXY.svg">
+</div>
+</div>
+<div class="jsbtn" src="ui/jsbtn.svg">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><path d="M36.2 41.9c7.1 0 11.3-4.3 11.3-9.4s-2.6-7-6.4-8.6l-4.3-1.8c-2.6-1-5-2-5-4.5s2-3.7 5-3.7a10.4 10.4 0 0 1 7 2.8l2.8-3.7A14 14 0 0 0 37 9c-6.2 0-10.7 3.9-10.7 8.9s3.3 7.2 6.4 8.5l4.4 1.9c2.9 1.2 5 2 5 4.7s-2 4-5.6 4a12.6 12.6 0 0 1-8.2-3.5L25 37.3A16.5 16.5 0 0 0 36.2 42zm-24.7 0c6.6 0 9.4-4.8 9.4-10.6V9.6h-5.6v21.3c0 4.5-1.5 6.1-4.5 6.1s-3.7-1-5-3.4l-3.8 3a10 10 0 0 0 9.4 5.3z" fill-rule="evenodd"></path></svg>
+</div>
+<div class="projprev">
+    <iframe class="projprev-iframe" src="data:text/html, <div></div>"></iframe>
+</div>
+<div class="left javascript">
+    <div class="copybtn">Copy</div>
+    <div class="jstext">Your Computa has made 3 = 5 and 2 Seconds to 5</div>
+</div>
+<input type="text" class="left input" value="hello">
+<p class="previewtext">previewisfun</p>
+
+</div>
+<script src="index.js">
+
+</script> 
+
+</body>
+</html>
+

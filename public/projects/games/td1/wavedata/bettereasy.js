@@ -3,12 +3,12 @@ const easyBMode = {
         [
             
                  //1
-             { "delay": 0, "cooldown": 1400, "amount": 6, "type": "normal" }
+             { "delay": 0, "cooldown": 1800, "amount": 6, "type": "normal" }
             
         ],
         [
              //2
-             { "delay": 0, "cooldown": 1400, "amount": 14, "type": "normal" }
+             { "delay": 0, "cooldown": 1800, "amount": 14, "type": "normal" }
         ],
         [
              //3
@@ -163,8 +163,8 @@ const easyBMode = {
         0, //25
     ],
     dialogues: [
-     /*1 */   'Welcome to your first mission Commander! I will help you with defending our town and what you can do as Commander',
-      /*2 */    'You can choose from Turret & Grenader to protect your base. Each tower has its own strength and weaknesses. Remember, the more towers you have, the more damage you can deal!',
+     /*1 */   'Welcome to your first mission Commander! I will help you with defending our town and what you can do here.',
+      /*2 */    'You can choose from many towers to protect your base. Each tower has its own strength and weaknesses. Remember, the more towers you have, the more damage you can deal!',
        /*3 */     'You can also buy upgrades for your towers to improve their effectiveness. Each upgrade has its own cost and benefits.',
         /*4 */      null,
          /*5*/       "Strong Enemies Detected! Upgrade your towers to improve their strength",
@@ -176,7 +176,7 @@ const easyBMode = {
         /*11*/"Hang on... There arent any rovers next wave? I think they might be camoflauged. Give me a second to upgrade the radar to detect them",
         /*12*/null,
         /*13*/"And there... Radar upgraded! Now I should be able to see the stealth rovers better. Looks like some more might come next wave? Make your towers be able to see them right now!",
-        /*14*/"I really hope you got that stealth detection. This might kill us if we dont eliminate them.",
+        /*14*/"I really hope you got that stealth detection. This might reach our base if we don't eliminate them.",
        null,
          /*16*/"Speedy Boss Detected! High damage is needed!",,
         null,

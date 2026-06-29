@@ -1,0 +1,32 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import projects from "@/data/projects";
+
+const aiProjects = projects.filter(
+  project => project.category === "AI"
+);
+
+---
+
+<BaseLayout title="AI" description="Browse AI experiments, utilities, and demos.">
+  <section class="project-page">
+    <p class="eyebrow">AI</p>
+    <h1>Browse AI experiments, utilities, and demos.</h1>
+    <p class="intro">
+      Computer Vision, Machine Learning, Language Processing, and more...
+    </p>
+  </section>
+
+  <section class="section reveal">
+    <SectionHeading
+      eyebrow="Projects"
+      title="Artifical Intelligence"
+      description="Tap any project to learn more."
+    />
+    <div class="grid cards-2">
+      {aiProjects.map((project) => <ProjectCard {...project} />)}
+    </div>
+  </section>
+</BaseLayout>

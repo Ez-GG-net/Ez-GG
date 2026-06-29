@@ -1,0 +1,11 @@
+.js-text {
+    color: #9c9;
+ 
+}
+.copybtn {
+    position: absolute;
+    right: 8vh;
+    top: 10px;
+    background-color: whitesmoke;
+    color:#9c9
+}

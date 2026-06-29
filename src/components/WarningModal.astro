@@ -1,0 +1,205 @@
+---
+const { id = "warning-modal", href = "#" } = Astro.props;
+---
+
+<div class="warning-wrapper">
+  <slot name="trigger" />
+
+  <dialog class="warning-modal" id={id}>
+    <div class="modal-inner">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+          <h3>Heads up</h3>
+        </div>
+        <button class="close-btn" type="button" aria-label="Close warning">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <p class="modal-body">
+        This project may not work properly on your device. It was designed for
+        desktop and may require a keyboard and mouse.
+      </p>
+
+      <div class="modal-footer">
+        <button class="back-btn" type="button">
+          <i class="fa-solid fa-arrow-left"></i>
+          Go Back
+        </button>
+
+        <button class="continue-btn" type="button" data-href={href}>
+          Continue Anyway
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    document.querySelectorAll(".warning-wrapper").forEach((wrapper) => {
+      const dialog = wrapper.querySelector("dialog");
+      const closeBtn = wrapper.querySelector(".close-btn");
+      const backBtn = wrapper.querySelector(".back-btn");
+      const trigger = wrapper.querySelector("[data-warning-trigger]");
+
+      trigger?.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dialog?.showModal();
+      });
+
+      const close = (e: Event) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dialog?.close();
+      };
+
+      closeBtn?.addEventListener("click", close);
+      backBtn?.addEventListener("click", close);
+
+      dialog?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (e.target === dialog) dialog.close();
+      });
+      const continueBtn = wrapper.querySelector(".continue-btn") as HTMLButtonElement;
+
+      continueBtn?.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const href = continueBtn.dataset.href;
+
+        if (href) {
+          window.location.href = href;
+        }
+      });
+    });
+  </script>
+
+  <style>
+    .warning-modal {
+      border: none;
+      border-radius: 1.25rem;
+      padding: 0;
+      width: min(92vw, 400px);
+      background: var(--bg);
+      color: var(--text);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .warning-modal::backdrop {
+      background: rgba(0, 0, 0, 0.55);
+    }
+
+    .modal-inner {
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .modal-title {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      color: var(--warning);
+    }
+
+    .modal-title i {
+      font-size: 1rem;
+    }
+
+    .modal-title h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    .close-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.2rem;
+      line-height: 1;
+      transition: color 150ms ease;
+    }
+
+    .close-btn:hover {
+      color: var(--text);
+    }
+
+    .modal-body {
+      margin: 0;
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.65;
+      padding-bottom: 0.2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition:
+        background 160ms ease,
+        border-color 160ms ease;
+    }
+
+    .back-btn:hover {
+      background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    .continue-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition:
+        transform 160ms ease,
+        opacity 160ms ease;
+    }
+
+    .continue-btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.9;
+    }
+  </style>
+</div>

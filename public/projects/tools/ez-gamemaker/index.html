@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Make Helper</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="select.css">
+    <link rel="stylesheet" href="settings.css">
+    <link rel="stylesheet" href="import.css">
+    <link rel="stylesheet" href="topui.css">
+</head>
+<body>
+    <div id="ui">
+        <div id="addElement">
+            <h1>Create a Custom Element</h1>
+            <input type="text" id="elementName" placeholder="Enter element name">
+            <button id="addElementButton">Add Element</button>
+            <div id="elementList">
+                
+                <h2>Element List</h2>
+            
+                <ul id="elementListItems"></ul>
+            </div>
+        </div>
+        <div id="adjustments">
+            <label>&nbsp;Color&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;|&nbsp;  Image</label>
+            <div class="control-group">
+                <div class="color-control-group">
+                    <div class="color-preview-row">
+                        <div id="colorPreview"></div>
+                        <input type="color" id="colorInput" style="display: none;" value="#ffffff">
+                    </div>
+                    <div id="lastColorButtonContainer" style="display: block;">
+                        <button id="useLastColorButton">Use Last</button>
+                    </div>
+                    <div class="alpha-control">
+                        <input type="range" id="alphaSlider" min="0" max="100" value="100">
+                        <input type="number" id="alphaValue" min="0" max="100" value="100">
+                    </div>
+                </div>
+                
+                <div class="image-upload-container">
+                    <label for="imageInput" class="image-upload-button" id="imagePreviewLabel">
+                        <span class="upload-icon">+</span>
+                        <span class="filename-preview"></span>
+                    </label>
+                    <button class="delete-image-button" id="deleteImageButton" style="display: none;">×</button>
+                </div>
+                <input type="file" id="imageInput" accept="image/*" style="display: none;">
+            </div>
+            <label>Width:</label>
+            <input type="number" id="widthInput" step="20">
+            <label>Height:</label>
+            <input type="number" id="heightInput" step="20">
+            <label>Position X:</label>
+            <input type="number" id="positionXInput" step="20">
+            <label>Position Y:</label>
+            <input type="number" id="positionYInput" step="20">
+        </div>
+        <div id="extrasTab">
+            <h2>Extras</h2>
+            <button id="toggleGridSnap">Toggle Grid Snapping</button>
+            <label id="gridSizeLabel" for="gridSizeInput">Grid Snap Size:</label>
+            <input type="number" id="gridSizeInput" placeholder="Enter grid size"value=50 min="5">
+        </div>
+    </div>
+
+    <div class="topui">
+        <button id="undoButton">
+            <span class="icon"></span>Undo
+        </button>
+        <button id="redoButton">
+            <span class="icon"></span>Redo
+        </button>
+        <button id="copyButton">
+            <span class="icon"></span> Copy
+        </button>
+        <button id="pasteButton">
+            <span class="icon"></span> Paste
+        </button>
+    
+
+    </div>
+    
+
+    
+    
+  
+    <canvas id="game"></canvas>
+
+    <script src="init.js"></script>
+    <script src="camera.js"></script>
+    <script src="lastcolor.js"></script>
+
+    <script src="topui.js"></script>
+
+    <script src="rename.js"></script>
+    <script src="edit.js"></script>
+    <script src="copy.js"></script>
+    <script src="index.js"></script>
+    
+    <script src="extra.js"></script>
+    
+    <script src="select.js"></script>
+    <!--<script src="multiselect.js"></script>-->
+   
+    <script src="undo.js"></script>
+  
+
+    <button id="importButton">Import</button>
+    <button id="export">Export To Clipboard</button>
+  <!--  <button id="saveButton">Save</button>-->
+    <script src="import.js"></script>    
+    <script src="export.js"></script>
+ 
+</body>
+</html>

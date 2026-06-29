@@ -1,0 +1,316 @@
+---
+import ControlsModal from "@/components/ControlsModal.astro";
+import WarningModal from "@/components/WarningModal.astro";
+
+const {
+  title,
+  category,
+  description,
+  href = "#",
+  tags = [],
+  mobileWarning = false,
+  controls = {},
+} = Astro.props;
+
+const banner = `${href}banner.png`;
+
+const placeholder = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
+  <rect width="100%" height="100%" fill="white"/>
+  <text
+    x="50%"
+    y="50%"
+    dominant-baseline="middle"
+    text-anchor="middle"
+    font-family="Times New Roman, Arial"
+    font-size="67"
+    fill="#111827"
+  >
+    ${title}
+  </text>
+</svg>
+`)}`;
+---
+
+<a class="project-card" href={href} data-mobile-warning={mobileWarning}>
+  <img class="card-banner" src={banner} alt="" aria-hidden="true" onerror={`this.src="${placeholder}"`} />
+
+  {
+    mobileWarning && (
+      <WarningModal href={href}>
+        <span
+          slot="trigger"
+          class="pc-warning"
+          role="button"
+          tabindex="0"
+          data-warning-trigger
+        >
+          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true" />
+          PC required
+        </span>
+      </WarningModal>
+    )
+  }
+
+  <div class="card-info">
+    <p class="category">{category}</p>
+    <h3>{title}</h3>
+    <p class="description">{description}</p>
+
+    <div class="tags">
+      {tags.map((tag: unknown) => <span>{tag}</span>)}
+    </div>
+
+    <div class="card-footer">
+      <span class="click-hint">Click anywhere to open</span>
+
+      <ControlsModal title="Controls" controls={controls}>
+        <button
+          slot="trigger"
+          class="control-button"
+          type="button"
+          aria-haspopup="dialog"
+          data-controls-trigger
+        >
+          View Controls
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </button>
+      </ControlsModal>
+    </div>
+  </div>
+</a>
+
+<script>
+  const isTouch = () =>
+    window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+
+  document
+    .querySelectorAll<HTMLAnchorElement>(".project-card")
+    .forEach((card) => {
+      let tapped = false;
+
+      card.addEventListener("click", (e) => {
+        if ((e.target as Element).closest("[data-controls-trigger]")) return;
+        if ((e.target as Element).closest("[data-warning-trigger]")) return;
+        if ((e.target as Element).closest(".controls-wrapper")) return;
+        if ((e.target as Element).closest(".warning-wrapper")) return;
+
+        if (!isTouch()) return;
+
+        const needsWarning = card.dataset.mobileWarning === "true";
+
+        if (!tapped) {
+          e.preventDefault();
+
+          tapped = true;
+          card.classList.add("is-tapped");
+
+          const onOutside = (ev: TouchEvent) => {
+            if (!card.contains(ev.target as Node)) {
+              tapped = false;
+              card.classList.remove("is-tapped");
+              document.removeEventListener("touchstart", onOutside);
+            }
+          };
+
+          document.addEventListener("touchstart", onOutside);
+          return;
+        }
+
+        // SECOND TAP
+        if (needsWarning) {
+          e.preventDefault();
+
+          const warningTrigger = card.querySelector("[data-warning-trigger]");
+
+          (warningTrigger as HTMLButtonElement).click();
+
+          tapped = false;
+          card.classList.remove("is-tapped");
+          return;
+        }
+      });
+
+      // no warning -> allow navigation
+    });
+</script>
+
+<style>
+  .project-card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: 1.6rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    text-decoration: none;
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+    min-height: 220px;
+    transition:
+      transform 260ms ease,
+      box-shadow 260ms ease,
+      border-color 260ms ease;
+  }
+
+  .project-card:hover,
+  .project-card.is-tapped {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    border-color: color-mix(in srgb, var(--accent) 30%, var(--border));
+  }
+
+  /* ── Banner (now a real <img>) ── */
+  .card-banner {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 380ms ease;
+    display: block;
+  }
+
+  .project-card:hover .card-banner,
+  .project-card.is-tapped .card-banner {
+    transform: scale(1.04);
+  }
+
+  /* ── PC warning: hidden on desktop, shown on touch devices only ── */
+  .pc-warning {
+    display: none;
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    z-index: 3;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: rgba(0, 0, 0, 0.6);
+    color: var(--warning);
+    border: 1px solid color-mix(in srgb, var(--warning) 30%, transparent);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .pc-warning {
+      display: flex;
+    }
+  }
+
+  /* ── Info panel ── */
+  .card-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    padding: 1.1rem 1.2rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    transform: translateY(100%);
+    transition: transform 300ms cubic-bezier(0.25, 0.8, 0.25, 1);
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+  }
+
+  .project-card:hover .card-info,
+  .project-card.is-tapped .card-info {
+    transform: translateY(0);
+  }
+
+  .category {
+    margin: 0;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    color: var(--text);
+  }
+
+  .description {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tags span {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.55rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+    font-weight: 600;
+    transition:
+      background 160ms ease,
+      color 160ms ease,
+      border-color 160ms ease;
+  }
+
+  .tags span:hover {
+    background: color-mix(in srgb, var(--accent) 20%, transparent);
+    color: color-mix(in srgb, var(--accent) 60%, var(--text));
+    border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .click-hint {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  .control-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+    color: var(--text);
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+      background 160ms ease,
+      border-color 160ms ease;
+  }
+
+  .control-button:hover {
+    background: color-mix(in srgb, var(--accent) 20%, var(--surface));
+    border-color: color-mix(in srgb, var(--accent) 65%, var(--border));
+  }
+</style>

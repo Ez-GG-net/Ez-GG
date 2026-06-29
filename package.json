@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "Ez-GG",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "start": "astro build && astro preview"
+    "start": "npm run build && npm run serve",
+    "serve": "npx serve dist"
   },
   "dependencies": {
     "astro": "^7.0.2"

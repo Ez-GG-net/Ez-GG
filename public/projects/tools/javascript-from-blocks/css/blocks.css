@@ -1,0 +1,45 @@
+.items {
+    background-color: rgb(47, 47, 47);
+    top:100px;
+    position: absolute;
+    overflow-y: scroll;
+    overflow-x:hidden;
+    width:calc(100% - 1px);
+    height:calc(100vh - 100px - 20px);
+    padding-top:20px;
+   
+}
+.item {
+   position: relative;
+    width:150px;
+    height: auto;
+    margin-left:calc(100% - 24vh);
+}
+
+.sayB {
+    width:105px;
+}
+.varset {
+    width: 122px;
+}
+.move {
+    width: 107px;
+}
+.varchange {
+    width: 134px;
+}
+.gotoXY {
+    width: 134px;
+}
+.pointdirection {
+    width: 134px;
+}
+.turnCW {
+    width: 134px;
+}
+.turnCCW {
+    width: 134px;
+}
+.glidetoXY {
+    width: 202px;
+}

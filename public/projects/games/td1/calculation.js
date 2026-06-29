@@ -1,6 +1,6 @@
 const bulletSpeed = 5
+    const pathNodes = [{"name":"Unnamed Element 2","width":50,"height":50,"x":360,"y":500,"color":"rgba(0, 255, 0, 1)","alpha":1,"shape":"rect","image":null,"imageName":null},{"name":"Unnamed Element 5","width":120/2,"height":120/2,"x":540,"y":500,"color":"rgba(255, 0, 0, 1)","alpha":1,"shape":"rect","image":null,"imageName":null},{"name":"Unnamed Element 6","width":120/2,"height":120/2,"x":540,"y":200,"color":"rgba(255, 0, 0, 1)","alpha":1,"shape":"rect","image":null,"imageName":null},{"name":"Unnamed Element 8","width":120/2,"height":120/2,"x":360,"y":200,"color":"rgba(255, 0, 0, 1)","alpha":1,"shape":"rect","image":null,"imageName":null}]
 function calculateSpawnerPathfinding(){
-    const pathNodes = [{"name":"Unnamed Element 2","width":60,"height":60,"x":360,"y":500,"color":"rgba(0, 255, 0, 1)","alpha":1,"shape":"rect","image":null,"imageName":null},{"name":"Unnamed Element 5","width":60,"height":60,"x":540,"y":500,"color":"rgba(255, 0, 0, 1)","alpha":1,"shape":"rect","image":null,"imageName":null},{"name":"Unnamed Element 6","width":60,"height":60,"x":540,"y":200,"color":"rgba(255, 0, 0, 1)","alpha":1,"shape":"rect","image":null,"imageName":null},{"name":"Unnamed Element 8","width":60,"height":60,"x":360,"y":200,"color":"rgba(255, 0, 0, 1)","alpha":1,"shape":"rect","image":null,"imageName":null}]
     // Implement pathfinding algorithm here
 spawned.forEach(function(enemy){
     if (enemy.y > targetSize) {
@@ -40,8 +40,8 @@ spawned.forEach(function(enemy){
     })
     pathNodes.forEach(function(node, index){
      
-    if (Math.round(enemy.getCenter().x) == node.x+30
-        && Math.round(enemy.getCenter().y) == node.y+30) {
+    if (Math.round(enemy.getCenter().x) == node.x+25
+        && Math.round(enemy.getCenter().y) == node.y+25) {
            
             if (index == 0) {
                 enemy.movingDirection  = 90
@@ -70,8 +70,6 @@ spawned.forEach(function(enemy){
 }
 
 function calculateEnemyPathfinding(){
-    const pathNodes = [{"name":"Unnamed Element 2","width":60,"height":60,"x":360,"y":500,"color":"rgba(0, 255, 0, 1)","alpha":1,"shape":"rect","image":null,"imageName":null},{"name":"Unnamed Element 5","width":60,"height":60,"x":540,"y":500,"color":"rgba(255, 0, 0, 1)","alpha":1,"shape":"rect","image":null,"imageName":null},{"name":"Unnamed Element 6","width":60,"height":60,"x":540,"y":200,"color":"rgba(255, 0, 0, 1)","alpha":1,"shape":"rect","image":null,"imageName":null},{"name":"Unnamed Element 8","width":60,"height":60,"x":360,"y":200,"color":"rgba(255, 0, 0, 1)","alpha":1,"shape":"rect","image":null,"imageName":null}]
-    // Implement pathfinding algorithm here
 enemies.forEach(function(enemy){
     if (enemy.y < -enemy.height) {
         player.health -= enemy.health
@@ -79,8 +77,8 @@ enemies.forEach(function(enemy){
     }
     pathNodes.forEach(function(node, index){
      
-    if (Math.round(enemy.getCenter().x) == node.x+30
-        && Math.round(enemy.getCenter().y) == node.y+30) {
+    if (Math.round(enemy.getCenter().x) == node.x+25
+        && Math.round(enemy.getCenter().y) == node.y+25) {
            
             if (index == 0) {
                 enemy.movingDirection  = 0

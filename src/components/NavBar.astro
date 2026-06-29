@@ -1,5 +1,327 @@
-<nav>
-  <a href="/">Home</a>
-  <a href="/projects">Projects</a>
-  <a href="/about">About</a>
-</nav>
+---
+const nav = [
+  { href: "/", label: "Home" },
+  { href: "/projects/", label: "Projects", dropdown: true },
+  { href: "/about/", label: "About" },
+];
+
+const projectLinks = [
+  { href: "/projects/games/", label: "Games", icon: "fa-solid fa-gamepad" },
+  { href: "/projects/ai/", label: "AI", icon: "fa-solid fa-brain" },
+  { href: "/projects/simulations/", label: "Simulations", icon: "fa-solid fa-vial-virus" },
+  { href: "/projects/tools/", label: "Tools", icon: "fa-solid fa-wrench" },
+];
+---
+
+<header class="site-header">
+  <div class="nav-shell">
+    <a class="brand" href="/" aria-label="Ez-GG home">
+      <img class="brand-mark" src="/logo.gif" alt="Ez-GG logo"/>
+      <span class="brand-text">
+        <strong>Ez-GG</strong>
+      </span>
+    </a>
+
+    <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle>
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <nav class="nav" data-nav>
+      {nav.map((item) => (
+        item.dropdown ? (
+          <div class="dropdown" data-dropdown --href={item.href}>
+            <button class="nav-link dropdown-trigger" type="button" aria-expanded="false" data-dropdown-trigger>
+              {item.label}
+              <i class="fa-solid fa-chevron-down chevron"></i>
+            </button>
+
+            <div class="dropdown-panel" data-dropdown-panel>
+              {projectLinks.map((link) => (
+                <a href={link.href} class="dropdown-item">
+                  <i class={link.icon}></i>
+                  <span>{link.label}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <a class="nav-link" href={item.href}>{item.label}</a>
+        )
+      ))}
+
+
+      <button class="theme-toggle" type="button" aria-label="Toggle theme" data-theme-toggle>
+        <i class="fa-solid fa-circle-half-stroke"></i>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<script is:inline>
+  const root = document.documentElement;
+  const menuToggle = document.querySelector("[data-menu-toggle]");
+  const nav = document.querySelector("[data-nav]");
+  const dropdown = document.querySelector("[data-dropdown]");
+  const dropdownTrigger = document.querySelector("[data-dropdown-trigger]");
+  const themeToggle = document.querySelector("[data-theme-toggle]");
+
+  const savedTheme = localStorage.getItem("ez-gg.theme");
+  const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const theme = savedTheme || (systemDark ? "dark" : "light");
+  root.dataset.theme = theme;
+
+  function setTheme(next) {
+    root.dataset.theme = next;
+    localStorage.setItem("ez-gg.theme", next);
+  }
+
+  menuToggle?.addEventListener("click", () => {
+    const expanded = menuToggle.getAttribute("aria-expanded") === "true";
+    menuToggle.setAttribute("aria-expanded", String(!expanded));
+    nav?.classList.toggle("open");
+  });
+
+  function toggleExpandDropdownMenu() {
+    const expanded = dropdownTrigger.getAttribute("aria-expanded") === "true";
+    dropdownTrigger.setAttribute("aria-expanded", String(!expanded));
+    dropdown?.classList.toggle("open");
+
+    if (expanded) {
+        location.href = dropdown.getAttribute("--href");
+    }
+  }
+
+  dropdownTrigger?.addEventListener("click", () => {
+    toggleExpandDropdownMenu();
+  });
+
+  themeToggle?.addEventListener("click", () => {
+    const next = root.dataset.theme === "dark" ? "light" : "dark";
+    setTheme(next);
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!dropdown?.contains(event.target) && !dropdownTrigger?.contains(event.target)) {
+      dropdown?.classList.remove("open");
+      dropdownTrigger?.setAttribute("aria-expanded", "false");
+    }
+  });
+
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--bg) 84%, transparent);
+  }
+
+  .nav-shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    text-decoration: none;
+    color: var(--text);
+    min-width: 0;
+  }
+
+  .brand-mark {
+    width: 2.2rem;
+    height: 2.2rem;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    color: white;
+    background: none;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .brand-text strong {
+    font-size: 1.7rem;
+    letter-spacing: -0.02em;
+  }
+
+  .brand-text small {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  .menu-toggle {
+    display: none;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 0.9rem;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .nav-link,
+  .dropdown-trigger,
+  .theme-toggle,
+  .nav-cta {
+    border: 1px solid transparent;
+    border-radius: 999px;
+    text-decoration: none;
+    font: inherit;
+    cursor: pointer;
+    transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .nav-link,
+  .dropdown-trigger {
+    padding: 0.7rem 1rem;
+    color: var(--text);
+    background: transparent;
+  }
+
+  .nav-link:hover,
+  .dropdown-trigger:hover
+  .theme-toggle:hover {
+    background: var(--surface-2);
+  }
+
+  .nav-cta {
+    padding: 0.78rem 1.05rem;
+    color: white;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: var(--shadow-sm);
+  }
+
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.72rem 0.95rem;
+    border-color: var(--border);
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  .dropdown {
+    position: relative;
+  }
+
+  .dropdown-panel {
+    position: absolute;
+    top: calc(100%);
+    left: 0;
+    min-width: 14rem;
+    padding: 0.55rem;
+    border: 1px solid var(--border);
+    border-radius: 1.2rem;
+    background: var(--surface);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition: 180ms ease;
+    backdrop-filter: blur(18px);
+  }
+
+  .dropdown:hover .dropdown-panel,
+  .dropdown.open .dropdown-panel {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.8rem 0.9rem;
+    border-radius: 0.95rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .dropdown-item:hover {
+    background: var(--surface-2);
+  }
+
+  .dropdown-item i {
+    width: 1.15rem;
+    text-align: center;
+    color: var(--accent);
+  }
+
+  .chevron {
+    margin-left: 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 900px) {
+    .menu-toggle {
+      display: inline-grid;
+      place-items: center;
+    }
+
+    .nav {
+      position: absolute;
+      right: 1rem;
+      top: calc(100% + 0.75rem);
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.5rem;
+      padding: 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      background: var(--surface);
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
+
+    .nav.open {
+      display: flex;
+    }
+
+    .dropdown-panel {
+      position: static;
+      min-width: 0;
+      margin-top: 0.5rem;
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+      box-shadow: none;
+      display: none;
+    }
+
+    .dropdown.open .dropdown-panel {
+      display: grid;
+    }
+
+    .nav-cta,
+    .theme-toggle,
+    .nav-link,
+    .dropdown-trigger {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

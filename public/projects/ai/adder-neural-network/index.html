@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TensorFlow Neural Network Adder Test</title>
 </head>
 <body>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
 
     <div id="console" style="height:90vh; overflow:scroll; border:1px solid black"></div>
     <input type="text" id="consoleInput" style="position:fixed;bottom:0.5em;width:50%;height:5%;"
-    placeholder="loadModel(), saveModel(), testModel(a,b),evolve(iterations)">
+    placeholder="loadModel(), evolve(iterations, mutationRate), testModel(a,b), saveModel()">
+    <button id="consoleSend" style="position:fixed;bottom:0.5em;left:50%;height:5%;">Send</button>
 
     <script src="index.js"></script>
 </body>

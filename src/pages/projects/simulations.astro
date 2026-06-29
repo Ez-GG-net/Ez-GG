@@ -1,0 +1,31 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import projects from "@/data/projects";
+
+const simulationProjects = projects.filter(
+  project => project.category === "Simulation"
+);
+---
+
+<BaseLayout title="Simulations" description="Run simulations and systems experiments.">
+  <section class="project-page">
+    <p class="eyebrow">Simulations</p>
+    <h1>Run simulations and systems experiments.</h1>
+    <p class="intro">
+      Physics, algorithms, and systems run on the web.
+    </p>
+  </section>
+
+  <section class="section reveal">
+    <SectionHeading
+      eyebrow="Projects"
+      title="Simulations"
+      description="Tap a project to learn more."
+    />
+    <div class="grid cards-2">
+      {simulationProjects.map((project) => <ProjectCard {...project} />)}
+    </div>
+  </section>
+</BaseLayout>

@@ -41,7 +41,7 @@ const createEnemy = function(type, stealth = false, immune){
         type:type,
         movingDirection:270,//degrees
         traveled:0,
-        speed:0.1,
+        speed:0.08,
         health:5,
         maxhealth:5,
         stealth,

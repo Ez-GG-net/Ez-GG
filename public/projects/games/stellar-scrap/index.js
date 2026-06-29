@@ -1297,6 +1297,7 @@ document.querySelector('.cancelBuy').onclick = ()=>{
     currentbuyingitems.ammo = 0
     currentbuyingitems.powerup = 0
     currentbuyingitems.cooldownpowerup = 0
+    currentbuyingitems.carrypower = 0
     document.querySelector('.cancelBuy').style.display = 'none'
 
 }

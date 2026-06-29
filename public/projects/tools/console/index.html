@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Inspect Tool Console</title>
 </head>
 <body>
-    <p>Dont look at me >.<</p>
+    <p>Click the button in the bottom right to try me out!</p>
 
     <script src="console.min.js"></script>
 <script>
-    console.log("This is a test to see if Inspect Tool disabled on Chromebooks can still be used. If you want to use this in your tests, go to https://ez-gg.netlify.app/games/ez-gg-stored/console/console.min.js and add a <script> element with the text inside of it")
+    console.log(`This is a copy of the console you see in the Inspect Tool. It also has a beta elements viewer. If you want to use this in your own project, add the element below to your HTML.`)
+    document.body.querySelector('script').setAttribute('src', `${location.href}console.min.js`)
+    console.log(document.body.querySelector('script'))
     console.log('This is a log.');
 
         console.warn('This is a warning.');

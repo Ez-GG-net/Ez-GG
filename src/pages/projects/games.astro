@@ -1,0 +1,31 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import projects from "@/data/projects";
+
+const games = projects.filter(
+  project => project.category === "Game"
+);
+---
+
+<BaseLayout title="Games" description="Play fun games and prototypes.">
+  <section class="project-page">
+    <p class="eyebrow">Games</p>
+    <h1>Play fun games and prototypes.</h1>
+    <p class="intro">
+      Browse a catalog of Ez-GG games
+    </p>
+  </section>
+
+  <section class="section reveal">
+    <SectionHeading
+      eyebrow="Projects"
+      title="Games"
+      description="Tap any game to play."
+    />
+    <div class="grid cards-2">
+      {games.map((game) => <ProjectCard {...game} />)}
+    </div>
+  </section>
+</BaseLayout>

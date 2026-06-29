@@ -1,0 +1,225 @@
+---
+const {
+  title = "Controls",
+  controls = {},
+  id = "controls-modal",
+} = Astro.props as {
+  title?: string;
+  controls?: Record<string, string>;
+  id?: string;
+};
+---
+
+<div class="controls-wrapper">
+  <slot name="trigger" />
+
+  <dialog class="controls-modal" id={id}>
+    <div class="modal-inner">
+      <div class="modal-header">
+        <h3>{title}</h3>
+
+        <button class="close-btn" type="button" aria-label="Close controls">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      {
+        Object.entries(controls).length > 0 ? (
+          <ul class="controls-list">
+            {Object.entries(controls).map(([label, value]) => (
+              <li class="control-row">
+                <span class="control-label">{label}</span>
+                <span class="control-connector">
+                  <i class="fa-solid fa-arrow-right" />
+                </span>
+                <span class="control-value">{value}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="empty">No controls defined.</p>
+        )
+      }
+    </div>
+  </dialog>
+</div>
+
+<script>
+  document.querySelectorAll(".controls-wrapper").forEach((wrapper) => {
+    const dialog = wrapper.querySelector("dialog");
+    const closeBtn = wrapper.querySelector(".close-btn");
+    const trigger = wrapper.querySelector("[data-controls-trigger]");
+
+    trigger?.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dialog?.showModal();
+    });
+
+    closeBtn?.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dialog?.close();
+    });
+
+    // Stop ALL clicks inside the dialog from reaching the <a> card
+    dialog?.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      // Close on backdrop click (target is the <dialog> element itself)
+      if (e.target === dialog) dialog.close();
+    });
+  });
+</script>
+
+<style>
+  .controls-modal {
+    border: none;
+    border-radius: 1.25rem;
+    padding: 0;
+    width: min(92vw, 420px);
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .controls-modal::backdrop {
+    background: rgba(0, 0, 0, 0.55);
+  }
+
+  .modal-inner {
+    padding: 1.2rem;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .modal-header h3 {
+    margin: 0;
+  }
+
+  .close-btn {
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 999px;
+
+    width: 1.5rem;
+    height: 1.5rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    transition:
+      background 180ms ease,
+      color 180ms ease,
+      box-shadow 180ms ease,
+      transform 180ms ease;
+  }
+
+  .close-btn:hover {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.25);
+  }
+
+  .close-btn:active {
+    transform: scale(0.95);
+  }
+
+  .controls-list {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .control-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    padding: 0.55rem;
+    border-radius: 1rem;
+
+    transition:
+      background 360ms ease,
+      transform 180ms ease;
+  }
+
+  .control-row:hover {
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+
+  .control-row:hover .control-label {
+    background: color-mix(in srgb, var(--accent) 22%, transparent);
+
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+  }
+
+  .control-row:hover .control-value {
+    border-color: color-mix(in srgb, var(--accent) 35%,q var(--border));
+
+    background: color-mix(in srgb, var(--accent) 10%, var(--surface-2));
+  }
+
+  .control-row:hover .control-connector {
+    color: var(--accent);
+    transform: translateX(3px);
+  }
+
+  .control-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.42rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--border));
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--text);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .control-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--muted);
+    font-size: 0.85rem;
+
+    transition:
+      color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .control-value {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 4.5rem;
+    padding: 0.45rem 0.8rem;
+    border-radius: 0.9rem;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    font-family: "Inter", system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .empty {
+    margin: 1rem 0 0;
+    color: var(--muted);
+  }
+
+</style>

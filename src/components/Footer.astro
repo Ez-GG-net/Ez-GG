@@ -1,0 +1,215 @@
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="/" class="footer-logo">
+        <img src="/favicon.ico" alt="Ez-GG" />
+        <span>Ez-GG</span>
+      </a>
+
+      <p>
+        A collection of games, AI projects, simulations,
+        tools, and experiments built for the web.
+      </p>
+
+      <div class="footer-socials">
+        <a
+          href="https://github.com/Ez-GG"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub"
+        >
+          <i class="fa-brands fa-github"></i>
+        </a>
+
+        <a
+          href="mailto:contact@ez-gg.net"
+          aria-label="Email"
+        >
+          <i class="fa-solid fa-envelope"></i>
+        </a>
+      </div>
+    </div>
+
+    <div>
+      <h4>Projects</h4>
+
+      <ul>
+        <li><a href="/projects/games/">Games</a></li>
+        <li><a href="/projects/ai/">AI</a></li>
+        <li><a href="/projects/simulations/">Simulations</a></li>
+        <li><a href="/projects/tools/">Tools</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Site</h4>
+
+      <ul>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h4>Resources</h4>
+
+      <ul>
+        <li>
+          <a
+            href="https://github.com/Ez-GG"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+        </li>
+
+        <li>
+          <a href="mailto:contact@ez-gg.net">
+            contact@ez-gg.net
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>
+      © {new Date().getFullYear()} Ez-GG. All rights reserved.
+    </span>
+
+    <span>
+      Built with Astro & Cloudflare.
+    </span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: 6rem;
+    border-top: 1px solid var(--border);
+    background: color-mix(
+      in srgb,
+      var(--surface) 70%,
+      transparent
+    );
+    backdrop-filter: blur(18px);
+  }
+
+  .footer-grid {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 4rem 1.25rem 2rem;
+
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+  }
+
+  .footer-brand p {
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 28rem;
+  }
+
+  .footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 1.15rem;
+    margin-bottom: 1rem;
+  }
+
+  .footer-logo img {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .footer-socials {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .footer-socials a {
+    width: 2.5rem;
+    height: 2.5rem;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease;
+  }
+
+  .footer-socials a:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+  }
+
+  .site-footer h4 {
+    margin: 0 0 1rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .site-footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  .site-footer li a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 180ms ease;
+  }
+
+  .site-footer li a:hover {
+    color: var(--text);
+  }
+
+  .footer-bottom {
+    max-width: 1180px;
+    margin: 0 auto;
+
+    padding: 1.5rem 1.25rem;
+
+    border-top: 1px solid var(--border);
+
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 900px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+    }
+  }
+</style>

@@ -1,7 +1,42 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+
+const categories = [
+  { title: "Games", href: "/projects/games/", icon: "fa-solid fa-gamepad", description: "Play fun games and prototypes." },
+  { title: "AI", href: "/projects/ai/", icon: "fa-solid fa-brain", description: "Browse AI experiments, utilities, and demos." },
+  { title: "Simulations", href: "/projects/simulations/", icon: "fa-solid fa-vial-virus", description: "Run simulations and systems experiments." },
+  { title: "Tools", href: "/projects/tools/", icon: "fa-solid fa-wrench", description: "Explore productivity tools and helpers, built for development." },
+];
 ---
 
-<BaseLayout title="Projects">
-  <h1>Projects</h1>
+<BaseLayout title="Projects" description="Browse all Ez-GG project categories.">
+  <section class="project-page">
+    <p class="eyebrow">Projects</p>
+    <h1>A curated gallery of work.</h1>
+    <p class="intro">
+      Explore the categories below to view games, AI demos, simulations, and tools.
+    </p>
+
+
+  </section>
+
+  <section class="section reveal">
+    <SectionHeading
+      eyebrow="Categories"
+      title="Everything in one place"
+      description="Tap any category to see the projects inside."
+    />
+
+    <div class="grid cards-2">
+      {categories.map((category) => (
+        <a class="category-link" href={category.href}>
+          <span class="card-badge"><i class={category.icon}></i> {category.title}</span>
+          <h3>{category.title}</h3>
+          <p>{category.description}</p>
+          
+        </a>
+      ))}
+    </div>
+  </section>
 </BaseLayout>

@@ -1,16 +1,34 @@
 console.log = function(log){
     document.getElementById("console").innerHTML += log+'<br>'
 }
+console.error = function(log){
+    document.getElementById("console").innerHTML += `<span style="color:red">${log}</span><br>`
+}
+window.addEventListener("error",(err)=>{
+    console.error(err.message)
+})
 console.clear = function(log){
     document.getElementById("console").innerHTML = ''
 }
 document.getElementById("consoleInput").addEventListener("keydown", function(e){
     if (e.key == 'Enter') {
-       new Function(document.getElementById("consoleInput").value
-        )()
+       run()
     }
 })
+document.getElementById("consoleSend").addEventListener("click", function(e){
+    run()
+})
+function run() {
+    try {
+    new Function(document.getElementById("consoleInput").value)()
+    
+    } catch (error) {
+        console.error(error)
+    }
+    document.getElementById("consoleInput").value = ''
+}
 console.log('Tensor Flow Adder Test')
+console.log("Type loadModel() to get started...")
 
 function waitForNextFrame() {
     return new Promise(resolve => requestAnimationFrame(resolve));
@@ -85,11 +103,12 @@ async function evolve(generations,mutationRate=0.1) {
 }
 
 async function testModel(a=0,b=0,c=1,model=networks[0]) {
+    c=1
 
     const prediction = model.predict(tf.tensor2d([[a, b]])).dataSync()[0];
     console.log(`
-        Test Inputs: ${a}, ${b} ${c==1?'+':'*'},
-        Predicted Sum: ${prediction} (Actual: ${c==1?a + b:a*b})
+        Test Inputs: ${a} ${c==1?'+':'*'} ${b},
+        Predicted Sum: ${prediction} (Rounded ${Math.round(prediction)}) (Actual: ${c==1?a + b:a*b})
         Error: ${Math.abs(prediction - (c==1?a + b:a*b))}`);
 }
 document.addEventListener("DOMContentLoaded", function(){
@@ -98,17 +117,22 @@ document.addEventListener("DOMContentLoaded", function(){
     },1000)
 })
 async function saveModel(model) {
+    if (!model) {
+        model = networks[0];
+    }
     await model.save('localstorage://best-model');
     console.log("Model saved successfully!");
 }
 async function loadModel() {
     try {
+        console.log("Loading saved model...");
         const model = await tf.loadLayersModel('localstorage://best-model');
         console.log("Model loaded successfully!");
         networks.push(model);
         return model;
     } catch (error) {
         console.error("Failed to load model:", error);
-        return createModel(); // Return a new model if loading fails
     }
+        console.log("Creating new model... Run evolve(iterations) to train");
+        return createModel(); // Return a new model if loading fails
 }

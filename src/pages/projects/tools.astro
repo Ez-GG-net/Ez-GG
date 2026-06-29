@@ -1,0 +1,31 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import projects from "@/data/projects";
+
+const toolProjects = projects.filter(
+  project => project.category === "Tool"
+);
+---
+
+<BaseLayout title="Tools" description="Explore productivity tools and helpers, built for development.">
+  <section class="project-page">
+    <p class="eyebrow">Tools</p>
+    <h1>Explore productivity tools and helpers, built for development.</h1>
+    <p class="intro">
+      Tools that will help you get things done fast.
+    </p>
+  </section>
+
+  <section class="section reveal">
+    <SectionHeading
+      eyebrow="Projects"
+      title="Tools"
+      description="Click a tool to learn how to use it."
+    />
+    <div class="grid cards-2">
+      {toolProjects.map((project) => <ProjectCard {...project} />)}
+    </div>
+  </section>
+</BaseLayout>
